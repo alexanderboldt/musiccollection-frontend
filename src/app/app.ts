@@ -20,6 +20,7 @@ import Keycloak from 'keycloak-js';
           <div class="artistTile">
             <mat-icon style="transform: scale(2); margin-top: 16px;">account_circle</mat-icon>
             <h2>{{ artist.name }}</h2>
+            <button (click)="deleteArtist(artist.id)"><mat-icon>delete_outline</mat-icon></button>
           </div>
         }
       </div>
@@ -39,10 +40,21 @@ export class App {
       this.username.set(`${profile.firstName} ${profile.lastName}`);
     });
 
+    this.readAllArtist()
+  }
+
+  readAllArtist() {
     this.http.get<Array<Artist>>(
       'http://localhost:4000/api/v1/artists',
       { headers: { 'Access-Control-Allow-Origin': '*', 'Content-type': 'application/json', 'Authorization': `Bearer ${this.keycloak.token}` }
-      }).subscribe(data => { this.artists.set(data) });
+      }).subscribe(data => this.artists.set(data));
+  }
+
+  deleteArtist(id: number) {
+    this.http.delete(
+      'http://localhost:4000/api/v1/artists/' + id,
+      { headers: { 'Access-Control-Allow-Origin': '*', 'Content-type': 'application/json', 'Authorization': `Bearer ${this.keycloak.token}` }
+      }).subscribe(() => this.readAllArtist());
   }
 
   logout() {
