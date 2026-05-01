@@ -15,9 +15,9 @@ import Keycloak from 'keycloak-js';
 
       <h1>Music Collection</h1>
 
-      <div style="display: grid; grid-template-columns: 200px 200px 200px;">
+      <div id="artistContent">
         @for (artist of artists(); track artist.id) {
-          <div style="display: flex; flex-direction: column; align-items: center; padding: 16px">
+          <div class="artistTile">
             <mat-icon style="transform: scale(2); margin-top: 16px;">account_circle</mat-icon>
             <h2>{{ artist.name }}</h2>
           </div>
