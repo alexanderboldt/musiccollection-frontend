@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import Keycloak from 'keycloak-js';
 
 @Component({
   selector: 'app-root',
@@ -9,4 +10,12 @@ import { RouterOutlet } from '@angular/router';
 })
 export class App {
   protected readonly title = signal('musiccollection-frontend');
+
+  private readonly keycloak = inject(Keycloak);
+
+  ngOnInit() {
+    this.keycloak.loadUserProfile().then(profile => {
+      this.title.set(profile.firstName ?? "anonymous");
+    });
+  }
 }
