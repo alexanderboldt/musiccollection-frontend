@@ -13,8 +13,16 @@ div.artistTile {
   padding: 16px;
   height: 250px;
   border-radius: 8px;
-  background-color: lightgray;
+  background-color: var(--mat-sys-primary-container);
 }
 div.artistTile:hover {
-  background-color: darkgrey;
+  background-color: var(--mat-sys-primary-fixed-dim);
+}
+
+h1 {
+  color: var(--mat-sys-primary);
+}
+
+h2 {
+  color: var(--mat-sys-on-primary-container);
 }
