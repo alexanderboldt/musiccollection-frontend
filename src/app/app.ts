@@ -3,10 +3,12 @@ import { HttpClient } from "@angular/common/http";
 import { RouterOutlet } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import Keycloak from 'keycloak-js';
+import {AsyncPipe, NgOptimizedImage} from '@angular/common';
+import {map, Observable} from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatIcon],
+  imports: [RouterOutlet, MatIcon, NgOptimizedImage, AsyncPipe],
   template: `
     <div style="display: flex; flex-direction: column; align-items: center; margin: 50px">
       <mat-icon style="transform: scale(2);">account_circle</mat-icon>
@@ -18,9 +20,19 @@ import Keycloak from 'keycloak-js';
       <div id="artistContent">
         @for (artist of artists(); track artist.id) {
           <div class="artistTile">
-            <mat-icon style="transform: scale(2); margin-top: 16px;">account_circle</mat-icon>
+            @if (artist.filename == null) {
+              <mat-icon style="transform: scale(2); margin-top: 16px;">account_circle</mat-icon>
+            } @else {
+              <p hidden="hidden">{{done()}}</p>
+              <!-- <img [src]="downloadArtistImage(artist.id)" style="width: 100%; border-radius: 8px;">
+              <img [src]="imageDisplay" style="width: 100%; border-radius: 8px;">-->
+              <img [src]="getImage$(artist.id) | async" style="height: 100%; width: 100%; object-fit: cover; border-radius: 8px;">
+
+            }
             <h2>{{ artist.name }}</h2>
-            <button (click)="deleteArtist(artist.id)"><mat-icon>delete_outline</mat-icon></button>
+            <button (click)="deleteArtist(artist.id)">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
           </div>
         }
       </div>
@@ -31,6 +43,10 @@ import Keycloak from 'keycloak-js';
 export class App {
   protected username = signal("");
   protected artists = signal<Artist[]>([]);
+
+  done = signal(false)
+  imageDisplay: string | ArrayBuffer | null = null
+  imageUrlMap = new Map<number, Observable<string>>();
 
   private readonly keycloak = inject(Keycloak);
   private readonly http = inject(HttpClient);
@@ -57,6 +73,53 @@ export class App {
       }).subscribe(() => this.readAllArtist());
   }
 
+  getImage$(id: number): Observable<string> {
+    if (!this.imageUrlMap.has(id)) {
+      this.imageUrlMap.set(id, this.downloadArtistImage(id));
+    }
+    return this.imageUrlMap.get(id)!;
+  }
+
+  downloadArtistImage(id: number) : Observable<string> {
+    return this.http.get(
+      `http://localhost:4000/api/v1/artists/${id}/images`,
+      { headers: { 'Access-Control-Allow-Origin': '*', 'Authorization': `Bearer ${this.keycloak.token}`},  responseType: 'blob'}
+    ).pipe(map(data => {
+      this.done.set(true)
+      return URL.createObjectURL(data)
+    }));
+  }
+
+  downloadArtistImage2(id: number) {
+    this.http.get(
+      `http://localhost:4000/api/v1/artists/${id}/images`,
+      { headers: { 'Access-Control-Allow-Origin': '*', 'Authorization': `Bearer ${this.keycloak.token}`},  responseType: 'blob'}
+    ).subscribe(data => {
+      this.imageDisplay = URL.createObjectURL(data)
+      this.done.set(true)
+    });
+  }
+
+  downloadArtistImage3(id: number) {
+    this.http.get(
+      `http://localhost:4000/api/v1/artists/${id}/images`,
+      { headers: { 'Access-Control-Allow-Origin': '*', 'Authorization': `Bearer ${this.keycloak.token}`},  responseType: 'blob'}
+    ).subscribe(data => {
+      const fileReader = new FileReader();
+
+      fileReader.addEventListener('load', () => {
+        this.imageDisplay = fileReader.result; // the resulting image data
+        console.log(this.imageDisplay)
+        this.done.set(true)
+      }, false);
+
+      if (data) {
+        console.log("read it")
+        fileReader.readAsDataURL(data);
+      }
+    });
+  }
+
   logout() {
     this.keycloak.logout({ redirectUri: window.location.origin });
   }
@@ -65,4 +128,5 @@ export class App {
 class Artist {
   id: number = 0
   name: string = ''
+  filename?: string
 }
