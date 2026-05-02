@@ -14,6 +14,8 @@ export class Api {
     })
   }
 
+  // user routes
+
   loadUsername(block: (username: string) => (void)) {
     this.keycloak.loadUserProfile().then(profile => {
       block(`${profile.firstName} ${profile.lastName}`)
@@ -22,6 +24,12 @@ export class Api {
 
   logout() {
     this.keycloak.logout({ redirectUri: window.location.origin });
+  }
+
+  // artist routes
+
+  createArtist(name: string): Observable<Artist> {
+    return this.http.post<Artist>(this.resourceUrl, { name: name }, { headers: this.headers })
   }
 
   readAllArtist(): Observable<Array<Artist>> {

@@ -6,6 +6,7 @@
 }
 
 /* user section */
+
 #cardUser {
   padding: 16px;
   display: flex;
@@ -28,6 +29,19 @@ h1 {
   color: var(--mat-sys-primary);
 }
 
+/* create artist section */
+
+#cardCreateArtist {
+  padding: 16px;
+  text-align: center;
+}
+
+#cardCreateArtist mat-form-field {
+  margin-right: 16px;
+}
+
+/* artist content section */
+
 #artistContent {
   margin-top: 8px;
   display: grid;
@@ -46,4 +60,3 @@ img {
   object-fit: cover;
   border-radius: 8px;
 }
-
