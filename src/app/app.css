@@ -1,28 +1,49 @@
-div#artistContent {
-  margin-top: 16px;
-  display: grid;
-  grid-template-columns: repeat(4, 250px);
-  grid-gap: 16px;
-}
-
-div.artistTile {
+#content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 16px;
-  height: 250px;
-  border-radius: 8px;
-  background-color: var(--mat-sys-primary-container);
+  margin: 36px
 }
-div.artistTile:hover {
-  background-color: var(--mat-sys-primary-fixed-dim);
+
+/* user section */
+#cardUser {
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#cardUser mat-icon {
+  transform: scale(2);
+  margin-left: 12px;
+  margin-right: 20px;
+}
+
+#cardUser p {
+  font-size: 20px;
+  margin-right: 8px;
 }
 
 h1 {
   color: var(--mat-sys-primary);
 }
 
-h2 {
-  color: var(--mat-sys-on-primary-container);
+#artistContent {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(4, 350px);
+  grid-gap: 16px;
 }
+
+mat-card-content {
+  width: 100%;
+  height: 250px;
+}
+
+img {
+  width: 90%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+

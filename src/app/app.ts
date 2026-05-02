@@ -6,30 +6,38 @@ import { MatIcon } from '@angular/material/icon';
 import Keycloak from 'keycloak-js';
 import { Observable } from 'rxjs';
 import { Api } from './api';
+import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import { MatButton} from '@angular/material/button';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatIcon, AsyncPipe],
+  imports: [RouterOutlet, MatIcon, AsyncPipe, MatCard, MatCardHeader, MatCardContent, MatCardActions, MatButton, MatCardTitle],
   template: `
-    <div style="display: flex; flex-direction: column; align-items: center; margin: 50px">
-      <mat-icon style="transform: scale(2);">account_circle</mat-icon>
-      <p style="font-size: 16px">{{ username() }}</p>
-      <button (click)="logout()" style="margin-bottom: 32px;">LOGOUT</button>
+    <div id="content">
+      <mat-card id="cardUser" appearance="outlined">
+        <mat-icon>account_circle</mat-icon>
+        <p>{{ username() }}</p>
+        <button (click)="logout()" matButton>LOGOUT</button>
+      </mat-card>
 
       <h1>Music Collection</h1>
       <div id="artistContent">
         @for (artist of artists(); track artist.id) {
-          <div class="artistTile">
-            @if (artist.filename == null) {
-              <mat-icon style="transform: scale(2); margin-top: 16px;">account_circle</mat-icon>
-            } @else {
-              <img [src]="downloadArtistImage(artist.id) | async" style="height: 100%; width: 100%; object-fit: cover; border-radius: 8px;">
-            }
-            <h2>{{ artist.name }}</h2>
-            <button (click)="deleteArtist(artist.id)">
-              <mat-icon>delete_outline</mat-icon>
-            </button>
-          </div>
+          <mat-card appearance="filled">
+            <mat-card-content>
+              @if (artist.filename == null) {
+                <img src="placeholder.svg">
+              } @else {
+                <img [src]="downloadArtistImage(artist.id) | async">
+              }
+            </mat-card-content>
+            <mat-card-header>
+              <mat-card-title>{{ artist.name }}</mat-card-title>
+            </mat-card-header>
+            <mat-card-actions>
+              <button (click)="deleteArtist(artist.id)" matButton>DELETE</button>
+            </mat-card-actions>
+          </mat-card>
         }
       </div>
     </div>
