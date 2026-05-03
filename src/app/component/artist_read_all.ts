@@ -7,6 +7,8 @@ import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle } 
 import { MatButton} from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { Api } from '../api';
+import { MatFormField, MatLabel } from '@angular/material/input';
+import { MatOption, MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'artist-read-all',
@@ -18,17 +20,41 @@ import { Api } from '../api';
     MatCardActions,
     MatCardContent,
     MatCardHeader,
-    MatCardTitle
+    MatCardTitle,
+    MatFormField,
+    MatLabel,
+    MatSelect,
+    MatOption
   ],
   template: `
+    <div id="sort">
+      <mat-form-field>
+        <mat-label>Sort</mat-label>
+        <mat-select [(value)]="selectedSort" (valueChange)="readAllArtist()">
+          @for (option of fieldSort; track option) {
+            <mat-option [value]="option.value">{{ option.viewValue }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Order</mat-label>
+        <mat-select [(value)]="selectedOrder" (valueChange)="readAllArtist()">
+          @for (option of orderSorts; track option) {
+            <mat-option [value]="option.value">{{ option.viewValue }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
     <div id="artistContent">
       @for (artist of artists(); track artist.id) {
         <mat-card appearance="filled">
           <mat-card-content>
             @if (artist.filename == null) {
-              <img src="placeholder.svg">
+              <img src="/placeholder.svg" alt="Placeholder Image">
             } @else {
-              <img [src]="downloadArtistImage(artist.id) | async">
+              <img [src]="downloadArtistImage(artist.id) | async" alt="Image of the Artist">
             }
           </mat-card-content>
           <mat-card-header>
@@ -42,8 +68,14 @@ import { Api } from '../api';
     </div>
   `,
   styles: `
+    #sort {
+      display: flex;
+      flex-direction: row;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
     #artistContent {
-      margin-top: 8px;
       display: grid;
       grid-template-columns: repeat(4, 350px);
       grid-gap: 16px;
@@ -63,6 +95,18 @@ import { Api } from '../api';
   `
 })
 export class ArtistReadAll {
+  fieldSort: Sort[] = [
+    {value: 'id', viewValue: 'Created'},
+    {value: 'name', viewValue: 'Name'},
+  ];
+  selectedSort = this.fieldSort[0].value;
+
+  orderSorts: Sort[] = [
+    {value: '', viewValue: 'ASC'},
+    {value: '-', viewValue: 'DESC'},
+  ];
+  selectedOrder = this.orderSorts[0].value;
+
   reloadArtists = input<boolean>()
 
   protected artists = signal<Artist[]>([]);
@@ -83,7 +127,7 @@ export class ArtistReadAll {
   }
 
   readAllArtist() {
-    this.api.readAllArtist().subscribe(data => this.artists.set(data))
+    this.api.readAllArtist(this.selectedOrder + this.selectedSort).subscribe(data => this.artists.set(data))
   }
 
   deleteArtist(id: number) {
@@ -96,4 +140,9 @@ export class ArtistReadAll {
     }
     return this.imageUrlMap.get(id)!;
   }
+}
+
+interface Sort {
+  value: string;
+  viewValue: string;
 }

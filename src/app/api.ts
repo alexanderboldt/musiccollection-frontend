@@ -32,8 +32,8 @@ export class Api {
     return this.http.post<Artist>(this.resourceUrl, { name: name }, { headers: this.headers })
   }
 
-  readAllArtist(): Observable<Array<Artist>> {
-    return this.http.get<Array<Artist>>(this.resourceUrl, { headers: this.headers });
+  readAllArtist(sort: string): Observable<Array<Artist>> {
+    return this.http.get<Array<Artist>>(this.resourceUrl, { headers: this.headers, params: { sort: sort } });
   }
 
   deleteArtist(id: number): Observable<any> {
@@ -43,6 +43,6 @@ export class Api {
   downloadArtistImage(id: number) : Observable<string> {
     return this.http
       .get(this.resourceUrl + `/${id}/images`, { headers: this.headers,  responseType: 'blob'})
-      .pipe(map(data => URL.createObjectURL(data)));;
+      .pipe(map(data => URL.createObjectURL(data)));
   }
 }
