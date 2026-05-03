@@ -2,7 +2,6 @@ import { Component, signal, inject } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { AsyncPipe } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { MatIcon } from '@angular/material/icon';
 import Keycloak from 'keycloak-js';
 import { Observable } from 'rxjs';
 import { Api } from './api';
@@ -10,17 +9,14 @@ import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle } 
 import { MatButton} from '@angular/material/button';
 import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { User } from './user';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatIcon, AsyncPipe, MatCard, MatCardHeader, MatCardContent, MatCardActions, MatButton, MatCardTitle, MatFormField, MatLabel, MatInput, FormsModule],
+  imports: [RouterOutlet, AsyncPipe, MatCard, MatCardHeader, MatCardContent, MatCardActions, MatButton, MatCardTitle, MatFormField, MatLabel, MatInput, FormsModule, User],
   template: `
     <div id="content">
-      <mat-card id="cardUser" appearance="outlined">
-        <mat-icon>account_circle</mat-icon>
-        <p>{{ username() }}</p>
-        <button (click)="logout()" matButton>LOGOUT</button>
-      </mat-card>
+      <user />
 
       <h1>Music Collection</h1>
 
@@ -59,7 +55,6 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './app.css'
 })
 export class App {
-  protected username = signal("");
   protected artists = signal<Artist[]>([]);
 
   imageUrlMap = new Map<number, Observable<string>>();
@@ -72,7 +67,6 @@ export class App {
   private api = new Api(this.http, this.keycloak);
 
   ngOnInit() {
-    this.api.loadUsername(username => this.username.set(username));
     this.readAllArtist()
   }
 
@@ -96,9 +90,5 @@ export class App {
       this.imageUrlMap.set(id, this.api.downloadArtistImage(id));
     }
     return this.imageUrlMap.get(id)!;
-  }
-
-  logout() {
-    this.api.logout();
   }
 }
