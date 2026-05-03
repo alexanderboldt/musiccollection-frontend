@@ -41,9 +41,7 @@ import { Api } from '../api';
   `
 })
 export class ArtistCreate {
-  title = input<string>();
-
-  inputCreateArtist = ''
+  inputCreateArtist = '';
 
   created = output<boolean>();
 
@@ -54,8 +52,8 @@ export class ArtistCreate {
 
   createArtist(name: string) {
     this.api.createArtist(name).subscribe(data => {
-      this.inputCreateArtist = ''
-      this.created.emit(true)
+      this.inputCreateArtist = '';
+      this.created.emit(true);
     })
   }
 }

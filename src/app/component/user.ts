@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
-import { Api } from './api';
+import { Api } from '../api';
 import Keycloak from 'keycloak-js';
 import { HttpClient } from '@angular/common/http';
 
