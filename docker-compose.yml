@@ -1,0 +1,13 @@
+services:
+  musiccollection-frontend:
+    image: ghcr.io/alexanderboldt/musiccollection-frontend:0.1.0
+    container_name: musiccollection-frontend
+    ports:
+      - 4200:4200
+    networks:
+      - musiccollection
+
+networks:
+  musiccollection:
+    name: musiccollection
+    external: true
