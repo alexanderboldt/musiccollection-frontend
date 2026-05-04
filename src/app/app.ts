@@ -38,7 +38,6 @@ import { MatCard } from '@angular/material/card';
         <router-outlet />
       </mat-card>
     </div>
-
   `,
   styles: `
     #app {

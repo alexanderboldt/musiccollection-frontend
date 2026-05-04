@@ -143,8 +143,3 @@ export class ArtistReadAll {
     return this.imageUrlMap.get(id)!;
   }
 }
-
-interface Sort {
-  value: string;
-  viewValue: string;
-}

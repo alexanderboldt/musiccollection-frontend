@@ -152,8 +152,3 @@ export class AlbumReadAll {
     return this.imageUrlMap.get(id)!;
   }
 }
-
-interface Sort {
-  value: string;
-  viewValue: string;
-}

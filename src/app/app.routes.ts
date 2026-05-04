@@ -5,6 +5,11 @@ import { AlbumReadAll } from './component/album_read_all'
 
 export const routes: Routes = [
   {
+    path: '',
+    redirectTo: '/artist',
+    pathMatch: 'full'
+  },
+  {
     path: 'artist',
     component: Artist
   },
