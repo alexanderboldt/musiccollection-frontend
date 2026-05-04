@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { Api } from '../api';
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
+import { MatDivider } from '@angular/material/list';
 
 @Component({
   selector: 'album-read-all',
@@ -24,9 +25,15 @@ import { MatOption, MatSelect } from '@angular/material/select';
     MatFormField,
     MatLabel,
     MatSelect,
-    MatOption
+    MatOption,
+    MatDivider
   ],
   template: `
+    <h2>Album</h2>
+    <mat-divider />
+
+    <h3>Overview</h3>
+
     <div id="sort">
       <mat-form-field>
         <mat-label>Sort</mat-label>
@@ -68,6 +75,10 @@ import { MatOption, MatSelect } from '@angular/material/select';
     </div>
   `,
   styles: `
+    h2 {
+      color: var(--mat-sys-primary);
+    }
+
     #sort {
       display: flex;
       flex-direction: row;

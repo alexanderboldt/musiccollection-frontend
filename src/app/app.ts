@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { User } from './component/user';
-import { MatListModule, MatNavList } from '@angular/material/list';
+import { MatListModule, MatActionList } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCard } from '@angular/material/card';
 
@@ -13,7 +13,7 @@ import { MatCard } from '@angular/material/card';
     RouterLink,
     FormsModule,
     User,
-    MatNavList,
+    MatActionList,
     MatListModule,
     MatIconModule,
     MatCard
@@ -27,10 +27,10 @@ import { MatCard } from '@angular/material/card';
           <user />
           <mat-divider />
 
-          <mat-nav-list>
-            <a routerLink="/artist" mat-list-item>Artist Overview</a>
-            <a routerLink="/album-overview" mat-list-item>Album Overview</a>
-          </mat-nav-list>
+          <mat-action-list>
+            <a routerLink="/artist" mat-list-item>Artist</a>
+            <a routerLink="/album-overview" mat-list-item>Album</a>
+          </mat-action-list>
         </mat-card>
       </div>
 
@@ -47,19 +47,15 @@ import { MatCard } from '@angular/material/card';
       padding: 16px;
     }
 
-    #sidebar {
+    #sidebar mat-card {
       width: 350px;
       margin-right: 16px;
+      padding: 16px;
     }
 
     h1 {
       color: var(--mat-sys-primary);
       text-align: center;
-    }
-
-    mat-divider {
-      width: 90%;
-      align-self: center;
     }
 
     #content {

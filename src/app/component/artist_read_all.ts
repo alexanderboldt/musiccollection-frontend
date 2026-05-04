@@ -27,6 +27,8 @@ import { MatOption, MatSelect } from '@angular/material/select';
     MatOption
   ],
   template: `
+    <h3>Overview</h3>
+
     <div id="sort">
       <mat-form-field>
         <mat-label>Sort</mat-label>
