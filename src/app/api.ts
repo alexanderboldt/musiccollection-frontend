@@ -48,10 +48,14 @@ export class Api {
     return this.http.post(this.artistUrl + `/${id}/images`, formData, { headers: this.headers })
   }
 
-  downloadArtistImage(id: number) : Observable<string> {
+  downloadArtistImage(id: number): Observable<string> {
     return this.http
-      .get(this.artistUrl + `/${id}/images`, { headers: this.headers,  responseType: 'blob'})
+      .get(this.artistUrl + `/${id}/images`, { headers: this.headers,  responseType: 'blob' })
       .pipe(map(data => URL.createObjectURL(data)));
+  }
+
+  deleteArtistImage(id: number): Observable<any> {
+    return this.http.delete(this.artistUrl + `/${id}/images`, { headers: this.headers })
   }
 
   // album routes
@@ -73,7 +77,7 @@ export class Api {
 
   downloadAlbumImage(id: number) : Observable<string> {
     return this.http
-      .get(this.albumUrl + `/${id}/images`, { headers: this.headers,  responseType: 'blob'})
+      .get(this.albumUrl + `/${id}/images`, { headers: this.headers,  responseType: 'blob' })
       .pipe(map(data => URL.createObjectURL(data)));
   }
 }
