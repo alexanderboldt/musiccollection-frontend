@@ -1,4 +1,4 @@
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import Keycloak from 'keycloak-js';
 import { map, Observable } from 'rxjs';
 
@@ -11,7 +11,7 @@ export class Api {
 
   constructor(private http: HttpClient, private keycloak: Keycloak) {
     this.headers = new HttpHeaders({
-      'Access-Control-Allow-Origin': '*', 'Content-type': 'application/json', 'Authorization': `Bearer ${this.keycloak.token}`
+      'Access-Control-Allow-Origin': '*', 'Authorization': `Bearer ${this.keycloak.token}`
     })
   }
 
@@ -41,6 +41,13 @@ export class Api {
     return this.http.delete(this.artistUrl + `/${id}`, { headers: this.headers });
   }
 
+  uploadArtistImage(id: number, file: File): Observable<any> {
+    let formData = new FormData();
+    formData.append('image', file)
+
+    return this.http.post(this.artistUrl + `/${id}/images`, formData, { headers: this.headers })
+  }
+
   downloadArtistImage(id: number) : Observable<string> {
     return this.http
       .get(this.artistUrl + `/${id}/images`, { headers: this.headers,  responseType: 'blob'})
@@ -55,6 +62,13 @@ export class Api {
 
   deleteAlbum(id: number): Observable<any> {
     return this.http.delete(this.albumUrl + `/${id}`, { headers: this.headers });
+  }
+
+  uploadAlbumImage(id: number, file: File): Observable<any> {
+    let formData = new FormData();
+    formData.append('image', file)
+
+    return this.http.post(this.albumUrl + `/${id}/images`, formData, { headers: this.headers })
   }
 
   downloadAlbumImage(id: number) : Observable<string> {

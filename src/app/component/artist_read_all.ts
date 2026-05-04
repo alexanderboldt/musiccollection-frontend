@@ -7,8 +7,9 @@ import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle } 
 import { MatButton} from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { Api } from '../api';
-import { MatFormField, MatLabel } from '@angular/material/input';
+import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
+import {MatIcon} from '@angular/material/icon';
 
 @Component({
   selector: 'artist-read-all',
@@ -24,7 +25,8 @@ import { MatOption, MatSelect } from '@angular/material/select';
     MatFormField,
     MatLabel,
     MatSelect,
-    MatOption
+    MatOption,
+    MatIcon, MatInput
   ],
   template: `
     <h3>Overview</h3>
@@ -63,6 +65,9 @@ import { MatOption, MatSelect } from '@angular/material/select';
             <mat-card-title>{{ artist.name }}</mat-card-title>
           </mat-card-header>
           <mat-card-actions>
+            <button type="button" (click)="fileInput.click()" matButton>SET IMAGE</button>
+            <input type="file" id="file" hidden (change)="uploadArtistImage(artist.id, $event)" #fileInput>
+
             <button (click)="deleteArtist(artist.id)" matButton>DELETE</button>
           </mat-card-actions>
         </mat-card>
@@ -134,6 +139,10 @@ export class ArtistReadAll {
 
   deleteArtist(id: number) {
     this.api.deleteArtist(id).subscribe(() => this.readAllArtist());
+  }
+
+  uploadArtistImage(id: number, event: any) {
+    this.api.uploadArtistImage(id, event.target.files[0]).subscribe(() => this.readAllArtist());
   }
 
   downloadArtistImage(id: number): Observable<string> {
