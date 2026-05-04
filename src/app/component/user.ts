@@ -1,6 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { MatCard } from '@angular/material/card';
 import { MatIcon } from '@angular/material/icon';
 import { Api } from '../api';
 import Keycloak from 'keycloak-js';
@@ -10,15 +9,14 @@ import { HttpClient } from '@angular/common/http';
   selector: 'user',
   imports: [
     MatButton,
-    MatCard,
     MatIcon
   ],
   template: `
-    <mat-card id="cardUser" appearance="outlined">
+    <div id="cardUser" appearance="outlined">
       <mat-icon>account_circle</mat-icon>
       <p>{{ username() }}</p>
       <button (click)="logout()" matButton>LOGOUT</button>
-    </mat-card>
+    </div>
   `,
   styles: `
     #cardUser {

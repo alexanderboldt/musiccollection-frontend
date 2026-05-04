@@ -11,8 +11,6 @@ import { ArtistReadAll } from './artist_read_all';
   template: `
     <artist-create (created)="artistCreated()" />
     <artist-read-all [reloadArtists]="reloadArtists()" />
-  `,
-  styles: `
   `
 })
 export class Artist {
