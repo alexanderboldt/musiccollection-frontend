@@ -1,5 +1,6 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { environment } from './environment/environment';
 
 import { routes } from './app.routes';
 import { provideKeycloak } from 'keycloak-angular';
@@ -10,7 +11,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideKeycloak({
       config: {
-        url: 'http://localhost:8080',
+        url: environment.keycloakUrl,
         realm: 'musiccollection',
         clientId: 'musiccollection-client'
       },

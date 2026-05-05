@@ -1,9 +1,10 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import Keycloak from 'keycloak-js';
 import { map, Observable } from 'rxjs';
+import { environment } from './environment/environment';
 
 export class Api {
-  private baseUrl = "http://localhost:4000";
+  private baseUrl = environment.apiUrl;
   private artistUrl = `${this.baseUrl}/api/v1/artists`;
   private albumUrl = `${this.baseUrl}/api/v1/albums`;
 
