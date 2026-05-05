@@ -17,8 +17,11 @@ RUN --mount=type=cache,target=/root/.npm npm ci
 # Copy the rest of the application source code into the container
 COPY . .
 
+# Get the configuration, should be one of the following: local, staging or production
+ARG configuration
+
 # Build the Angular application
-RUN npm run build
+RUN npm run build -- --configuration $configuration
 
 # =========================================
 # Stage 2: Prepare Nginx to Serve Static Files
