@@ -1,6 +1,6 @@
 services:
   musiccollection-frontend:
-    image: ghcr.io/alexanderboldt/musiccollection-frontend:0.2.0
+    image: ghcr.io/alexanderboldt/musiccollection-frontend:0.3.0-local
     container_name: musiccollection-frontend
     ports:
       - 4200:4200
