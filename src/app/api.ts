@@ -80,4 +80,8 @@ export class Api {
       .get(this.albumUrl + `/${id}/images`, { headers: this.headers,  responseType: 'blob' })
       .pipe(map(data => URL.createObjectURL(data)));
   }
+
+  deleteAlbumImage(id: number): Observable<any> {
+    return this.http.delete(this.albumUrl + `/${id}/images`, { headers: this.headers })
+  }
 }

@@ -68,6 +68,11 @@ import { MatDivider } from '@angular/material/list';
             <mat-card-title>{{ album.name }}</mat-card-title>
           </mat-card-header>
           <mat-card-actions>
+            <button type="button" (click)="fileInput.click()" matButton>SET IMAGE</button>
+            <input type="file" id="file" hidden (change)="uploadAlbumImage(album.id, $event)" #fileInput>
+
+            <button (click)="deleteAlbumImage(album.id)" matButton>DELETE IMAGE</button>
+
             <button (click)="deleteAlbum(album.id)" matButton>DELETE</button>
           </mat-card-actions>
         </mat-card>
@@ -145,10 +150,18 @@ export class AlbumReadAll {
     this.api.deleteAlbum(id).subscribe(() => this.readAllAlbums());
   }
 
+  uploadAlbumImage(id: number, event: any) {
+    this.api.uploadAlbumImage(id, event.target.files[0]).subscribe(() => this.readAllAlbums());
+  }
+
   downloadAlbumImage(id: number): Observable<string> {
     if (!this.imageUrlMap.has(id)) {
       this.imageUrlMap.set(id, this.api.downloadAlbumImage(id));
     }
     return this.imageUrlMap.get(id)!;
+  }
+
+  deleteAlbumImage(id: number) {
+    this.api.deleteAlbumImage(id).subscribe(() => this.readAllAlbums());
   }
 }

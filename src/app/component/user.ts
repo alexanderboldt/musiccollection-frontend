@@ -12,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
     MatIcon
   ],
   template: `
-    <div id="cardUser" appearance="outlined">
+    <div id="cardUser">
       <mat-icon>account_circle</mat-icon>
       <p>{{ username() }}</p>
       <button (click)="logout()" matButton>LOGOUT</button>
