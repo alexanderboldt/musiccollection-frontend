@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { Api } from '../api';
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
+import { ArtistResponse } from '../model/artist';
 
 @Component({
   selector: 'artist-read-all',
@@ -116,7 +117,7 @@ export class ArtistReadAll {
 
   reloadArtists = input<boolean>()
 
-  protected artists = signal<Artist[]>([]);
+  protected artists = signal<ArtistResponse[]>([]);
 
   imageUrlMap = new Map<number, Observable<string>>();
 

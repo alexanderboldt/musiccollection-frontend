@@ -2,7 +2,8 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import Keycloak from 'keycloak-js';
 import { map, Observable } from 'rxjs';
 import { environment } from './environment/environment';
-import { Album, AlbumRequest } from './model/album';
+import { AlbumResponse, AlbumRequest } from './model/album';
+import { ArtistResponse } from './model/artist';
 
 export class Api {
   private baseUrl = environment.apiUrl;
@@ -31,12 +32,12 @@ export class Api {
 
   // artist routes
 
-  createArtist(name: string): Observable<Artist> {
-    return this.http.post<Artist>(this.artistUrl, { name: name }, { headers: this.headers })
+  createArtist(name: string): Observable<ArtistResponse> {
+    return this.http.post<ArtistResponse>(this.artistUrl, { name: name }, { headers: this.headers })
   }
 
-  readAllArtist(sort: string): Observable<Array<Artist>> {
-    return this.http.get<Array<Artist>>(this.artistUrl, { headers: this.headers, params: { sort: sort } });
+  readAllArtist(sort: string): Observable<Array<ArtistResponse>> {
+    return this.http.get<Array<ArtistResponse>>(this.artistUrl, { headers: this.headers, params: { sort: sort } });
   }
 
   deleteArtist(id: number): Observable<any> {
@@ -62,12 +63,12 @@ export class Api {
 
   // album routes
 
-  createAlbum(album: AlbumRequest): Observable<Album> {
-    return this.http.post<Album>(this.albumUrl, album, { headers: this.headers })
+  createAlbum(album: AlbumRequest): Observable<AlbumResponse> {
+    return this.http.post<AlbumResponse>(this.albumUrl, album, { headers: this.headers })
   }
 
-  readAllAlbums(sort: string): Observable<Array<Album>> {
-    return this.http.get<Array<Album>>(this.albumUrl, { headers: this.headers, params: { sort: sort } });
+  readAllAlbums(sort: string): Observable<Array<AlbumResponse>> {
+    return this.http.get<Array<AlbumResponse>>(this.albumUrl, { headers: this.headers, params: { sort: sort } });
   }
 
   deleteAlbum(id: number): Observable<any> {

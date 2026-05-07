@@ -5,7 +5,7 @@ export class AlbumRequest {
   tracks: number = 0
 }
 
-export class Album {
+export class AlbumResponse {
   id: number = 0
   name: string = ''
   filename?: string

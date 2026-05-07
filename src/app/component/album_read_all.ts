@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { Api } from '../api';
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { Album } from '../model/album';
+import { AlbumResponse } from '../model/album';
 
 @Component({
   selector: 'album-read-all',
@@ -121,7 +121,7 @@ export class AlbumReadAll {
 
   reloadAlbums = input<boolean>()
 
-  protected albums = signal<Album[]>([]);
+  protected albums = signal<AlbumResponse[]>([]);
 
   imageUrlMap = new Map<number, Observable<string>>();
 
