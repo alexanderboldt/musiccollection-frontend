@@ -7,6 +7,7 @@ export class AlbumRequest {
 
 export class AlbumResponse {
   id: number = 0
+  artistId: number = 0
   name: string = ''
   filename?: string
 }

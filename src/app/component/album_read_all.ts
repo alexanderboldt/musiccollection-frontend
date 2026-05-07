@@ -2,14 +2,13 @@ import { Component, signal, inject, input } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { AsyncPipe } from '@angular/common';
 import Keycloak from 'keycloak-js';
-import { Observable } from 'rxjs';
-import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import { Observable, forkJoin } from 'rxjs';
+import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle, MatCardSubtitle } from '@angular/material/card';
 import { MatButton} from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { Api } from '../api';
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { AlbumResponse } from '../model/album';
 
 @Component({
   selector: 'album-read-all',
@@ -22,6 +21,7 @@ import { AlbumResponse } from '../model/album';
     MatCardContent,
     MatCardHeader,
     MatCardTitle,
+    MatCardSubtitle,
     MatFormField,
     MatLabel,
     MatSelect,
@@ -62,6 +62,7 @@ import { AlbumResponse } from '../model/album';
           </mat-card-content>
           <mat-card-header>
             <mat-card-title>{{ album.name }}</mat-card-title>
+            <mat-card-subtitle>{{ album.artistName }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-actions>
             <button type="button" (click)="fileInput.click()" matButton>SET IMAGE</button>
@@ -121,7 +122,7 @@ export class AlbumReadAll {
 
   reloadAlbums = input<boolean>()
 
-  protected albums = signal<AlbumResponse[]>([]);
+  protected albums = signal<Album[]>([]);
 
   imageUrlMap = new Map<number, Observable<string>>();
 
@@ -130,16 +131,26 @@ export class AlbumReadAll {
 
   private api = new Api(this.http, this.keycloak);
 
-  ngOnInit() {
-    this.readAllAlbums()
-  }
-
   ngOnChanges() {
     this.readAllAlbums()
   }
 
   readAllAlbums() {
-    this.api.readAllAlbums(this.selectedOrder + this.selectedSort).subscribe(data => this.albums.set(data))
+    forkJoin([
+      this.api.readAllAlbums(this.selectedOrder + this.selectedSort),
+      this.api.readAllArtist("id")
+    ]).subscribe(([albumResponses, artistResponses]) => {
+      const albums = albumResponses.map<Album>(albumResponse => {
+        const album = new Album()
+        album.id = albumResponse.id
+        album.name = albumResponse.name
+        album.artistName = artistResponses.find(artistResponse => artistResponse.id == albumResponse.artistId)?.name!!
+        album.filename = albumResponse.filename
+
+        return album
+      })
+      this.albums.set(albums)
+    })
   }
 
   deleteAlbum(id: number) {
@@ -160,4 +171,11 @@ export class AlbumReadAll {
   deleteAlbumImage(id: number) {
     this.api.deleteAlbumImage(id).subscribe(() => this.readAllAlbums());
   }
+}
+
+class Album {
+  id: number = 0
+  name: string = ''
+  artistName: string = ''
+  filename?: string
 }
