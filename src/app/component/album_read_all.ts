@@ -10,6 +10,7 @@ import { Api } from '../api';
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatDivider } from '@angular/material/list';
+import { Album } from '../model/album';
 
 @Component({
   selector: 'album-read-all',

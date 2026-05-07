@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import Keycloak from 'keycloak-js';
 import { map, Observable } from 'rxjs';
 import { environment } from './environment/environment';
+import { Album, AlbumRequest } from './model/album';
 
 export class Api {
   private baseUrl = environment.apiUrl;
@@ -61,8 +62,12 @@ export class Api {
 
   // album routes
 
-  readAllAlbums(sort: string): Observable<Array<Artist>> {
-    return this.http.get<Array<Artist>>(this.albumUrl, { headers: this.headers, params: { sort: sort } });
+  createAlbum(album: AlbumRequest): Observable<Album> {
+    return this.http.post<Album>(this.albumUrl, album, { headers: this.headers })
+  }
+
+  readAllAlbums(sort: string): Observable<Array<Album>> {
+    return this.http.get<Array<Album>>(this.albumUrl, { headers: this.headers, params: { sort: sort } });
   }
 
   deleteAlbum(id: number): Observable<any> {
