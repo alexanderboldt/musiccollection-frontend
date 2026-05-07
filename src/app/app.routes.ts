@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { Artist } from './component/artist'
-import { AlbumReadAll } from './component/album_read_all'
+import { Album } from './component/album'
 
 export const routes: Routes = [
   {
@@ -14,7 +14,7 @@ export const routes: Routes = [
     component: Artist
   },
   {
-    path: 'album-overview',
-    component: AlbumReadAll
+    path: 'album',
+    component: Album
   }
 ];

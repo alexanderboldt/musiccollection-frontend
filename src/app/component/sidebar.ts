@@ -28,7 +28,7 @@ import { MatCard } from '@angular/material/card';
 
         <mat-action-list>
           <a routerLink="/artist" routerLinkActive="active-route" mat-list-item><span routerLinkActive="active-text">Artist</span></a>
-          <a routerLink="/album-overview" routerLinkActive="active-route" mat-list-item><span routerLinkActive="active-text">Album</span></a>
+          <a routerLink="/album" routerLinkActive="active-route" mat-list-item><span routerLinkActive="active-text">Album</span></a>
         </mat-action-list>
       </mat-card>
     </div>

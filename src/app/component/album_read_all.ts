@@ -9,7 +9,6 @@ import { FormsModule } from '@angular/forms';
 import { Api } from '../api';
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { MatDivider } from '@angular/material/list';
 import { Album } from '../model/album';
 
 @Component({
@@ -26,13 +25,9 @@ import { Album } from '../model/album';
     MatFormField,
     MatLabel,
     MatSelect,
-    MatOption,
-    MatDivider
+    MatOption
   ],
   template: `
-    <h2>Album</h2>
-    <mat-divider />
-
     <h3>Overview</h3>
 
     <div id="sort">
