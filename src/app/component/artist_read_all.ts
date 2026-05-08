@@ -10,6 +10,7 @@ import { Api } from '../api';
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { ArtistResponse } from '../model/artist';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'artist-read-all',
@@ -25,7 +26,8 @@ import { ArtistResponse } from '../model/artist';
     MatFormField,
     MatLabel,
     MatSelect,
-    MatOption
+    MatOption,
+    RouterLink
   ],
   template: `
     <h3>Overview</h3>
@@ -53,16 +55,18 @@ import { ArtistResponse } from '../model/artist';
     <div id="artistContent">
       @for (artist of artists(); track artist.id) {
         <mat-card appearance="filled">
-          <mat-card-content>
-            @if (artist.filename == null) {
-              <img src="/placeholder.svg" alt="Placeholder Image">
-            } @else {
-              <img [src]="downloadArtistImage(artist.id) | async" alt="Image of the Artist">
-            }
-          </mat-card-content>
-          <mat-card-header>
-            <mat-card-title>{{ artist.name }}</mat-card-title>
-          </mat-card-header>
+          <a routerLink="/artist/{{artist.id}}">
+            <mat-card-content>
+              @if (artist.filename == null) {
+                <img src="/placeholder.svg" alt="Placeholder Image">
+              } @else {
+                <img [src]="downloadArtistImage(artist.id) | async" alt="Image of the Artist">
+              }
+            </mat-card-content>
+            <mat-card-header>
+              <mat-card-title>{{ artist.name }}</mat-card-title>
+            </mat-card-header>
+          </a>
           <mat-card-actions>
             <button type="button" (click)="fileInput.click()" matButton>SET IMAGE</button>
             <input type="file" id="file" hidden (change)="uploadArtistImage(artist.id, $event)" #fileInput>
