@@ -40,6 +40,10 @@ export class Api {
     return this.http.get<Array<ArtistResponse>>(this.artistUrl, { headers: this.headers, params: { sort: sort } });
   }
 
+  readSingleArtist(id: number): Observable<ArtistResponse> {
+    return this.http.get<ArtistResponse>(this.artistUrl + `/${id}`, { headers: this.headers });
+  }
+
   deleteArtist(id: number): Observable<any> {
     return this.http.delete(this.artistUrl + `/${id}`, { headers: this.headers });
   }
