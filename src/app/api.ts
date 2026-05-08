@@ -44,6 +44,10 @@ export class Api {
     return this.http.get<ArtistResponse>(this.artistUrl + `/${id}`, { headers: this.headers });
   }
 
+  updateArtist(id: number, name: string): Observable<ArtistResponse> {
+    return this.http.put<ArtistResponse>(this.artistUrl + `/${id}`, { name: name }, { headers: this.headers });
+  }
+
   deleteArtist(id: number): Observable<any> {
     return this.http.delete(this.artistUrl + `/${id}`, { headers: this.headers });
   }
