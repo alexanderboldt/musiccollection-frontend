@@ -102,7 +102,7 @@ export class AlbumCreate {
     album.tracks = this.inputTracks;
 
     this.api.createAlbum(album).subscribe(() => {
-      this.snackBar.open("Album created successfully.", "", { duration: 3000 });
+      this.snackBar.open(`Album ${album.name} created successfully.`, "", { duration: 3000 });
       this.router.navigate(["/album"]);
     })
   }

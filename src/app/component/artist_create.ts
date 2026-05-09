@@ -5,6 +5,9 @@ import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import Keycloak from 'keycloak-js';
 import { HttpClient } from '@angular/common/http';
 import { Api } from '../api';
+import { MatIcon } from '@angular/material/icon';
+import { Router, RouterLink } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'artist-create',
@@ -13,10 +16,18 @@ import { Api } from '../api';
     FormsModule,
     MatFormField,
     MatInput,
-    MatLabel
+    MatLabel,
+    MatIcon,
+    RouterLink
   ],
   template: `
-    <h3>Create</h3>
+    <button routerLink="/artist" matButton>
+      <mat-icon>arrow_back</mat-icon>
+      Back
+    </button>
+
+    <h2>Create</h2>
+
     <form>
       <mat-form-field>
         <mat-label>Artist</mat-label>
@@ -26,8 +37,12 @@ import { Api } from '../api';
     </form>
   `,
   styles: `
-    button {
-      margin-left: 16px;
+    h2 {
+      color: var(--mat-sys-primary);
+    }
+
+    mat-form-field {
+      margin-right: 16px;
     }
   `
 })
@@ -38,13 +53,15 @@ export class ArtistCreate {
 
   private readonly keycloak = inject(Keycloak);
   private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
+  private snackBar = inject(MatSnackBar);
 
   private api = new Api(this.http, this.keycloak);
 
   createArtist(name: string) {
     this.api.createArtist(name).subscribe(() => {
-      this.inputCreateArtist = '';
-      this.created.emit(true);
+      this.snackBar.open(`Artist ${name} created successfully.`, "", { duration: 3000 });
+      this.router.navigate(["/artist"]);
     })
   }
 }

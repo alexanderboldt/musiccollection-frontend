@@ -11,6 +11,7 @@ import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { ArtistResponse } from '../model/artist';
 import { RouterLink } from '@angular/router';
+import {MatIcon} from '@angular/material/icon';
 
 @Component({
   selector: 'artist-read-all',
@@ -27,11 +28,10 @@ import { RouterLink } from '@angular/router';
     MatLabel,
     MatSelect,
     MatOption,
-    RouterLink
+    RouterLink,
+    MatIcon
   ],
   template: `
-    <h3>Overview</h3>
-
     <div id="sort">
       <mat-form-field>
         <mat-label>Sort</mat-label>
@@ -50,6 +50,11 @@ import { RouterLink } from '@angular/router';
           }
         </mat-select>
       </mat-form-field>
+
+      <button routerLink="/artist/new" matButton>
+        <mat-icon>add_circle_outline</mat-icon>
+        CREATE ARTIST
+      </button>
     </div>
 
     <div id="artistContent">
@@ -83,6 +88,7 @@ import { RouterLink } from '@angular/router';
     #sort {
       display: flex;
       flex-direction: row;
+      align-items: baseline;
       gap: 16px;
       margin-top: 24px;
     }
