@@ -1,7 +1,5 @@
 import { Component, signal, inject, input } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
 import { AsyncPipe } from '@angular/common';
-import Keycloak from 'keycloak-js';
 import { Observable, forkJoin } from 'rxjs';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle, MatCardSubtitle } from '@angular/material/card';
 import { MatButton} from '@angular/material/button';
@@ -134,10 +132,7 @@ export class AlbumReadAll {
 
   imageUrlMap = new Map<number, Observable<string>>();
 
-  private readonly keycloak = inject(Keycloak);
-  private readonly http = inject(HttpClient);
-
-  private api = new Api(this.http, this.keycloak);
+  private readonly api = inject(Api);
 
   ngOnChanges() {
     this.readAllAlbums()

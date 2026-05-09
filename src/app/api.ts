@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import Keycloak from 'keycloak-js';
 import { map, Observable } from 'rxjs';
@@ -5,6 +6,7 @@ import { environment } from './environment/environment';
 import { AlbumResponse, AlbumRequest } from './model/album';
 import { ArtistResponse } from './model/artist';
 
+@Injectable({ providedIn: 'root' })
 export class Api {
   private baseUrl = environment.apiUrl;
   private artistUrl = `${this.baseUrl}/api/v1/artists`;

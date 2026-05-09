@@ -2,8 +2,6 @@ import { Component, inject, signal } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { Api } from '../api';
-import Keycloak from 'keycloak-js';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'user',
@@ -41,10 +39,7 @@ import { HttpClient } from '@angular/common/http';
 export class User {
   protected username = signal("");
 
-  private readonly keycloak = inject(Keycloak);
-  private readonly http = inject(HttpClient);
-
-  private api = new Api(this.http, this.keycloak);
+  private readonly api = inject(Api);
 
   ngOnInit() {
     this.api.loadUsername(username => this.username.set(username));

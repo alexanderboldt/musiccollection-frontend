@@ -1,7 +1,5 @@
 import { Component, signal, inject, input } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
 import { AsyncPipe } from '@angular/common';
-import Keycloak from 'keycloak-js';
 import { Observable } from 'rxjs';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatButton} from '@angular/material/button';
@@ -11,7 +9,7 @@ import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { ArtistResponse } from '../model/artist';
 import { RouterLink } from '@angular/router';
-import {MatIcon} from '@angular/material/icon';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'artist-read-all',
@@ -131,10 +129,7 @@ export class ArtistReadAll {
 
   imageUrlMap = new Map<number, Observable<string>>();
 
-  private readonly keycloak = inject(Keycloak);
-  private readonly http = inject(HttpClient);
-
-  private api = new Api(this.http, this.keycloak);
+  private readonly api = inject(Api);
 
   ngOnInit() {
     this.readAllArtist()

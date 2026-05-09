@@ -3,8 +3,6 @@ import { MatButton } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import Keycloak from 'keycloak-js';
-import { HttpClient } from '@angular/common/http';
 import { Api } from '../api';
 import { AlbumRequest } from '../model/album';
 import { MatOption } from '@angular/material/core';
@@ -75,12 +73,9 @@ export class AlbumCreate {
   inputYear = 0;
   inputTracks = 0;
 
-  private readonly keycloak = inject(Keycloak);
-  private readonly http = inject(HttpClient);
+  private readonly api = inject(Api);
   private readonly router = inject(Router);
-  private snackBar = inject(MatSnackBar);
-
-  private api = new Api(this.http, this.keycloak);
+  private readonly snackBar = inject(MatSnackBar);
 
   ngOnInit() {
     this.api.readAllArtist("id").subscribe(artists => {
