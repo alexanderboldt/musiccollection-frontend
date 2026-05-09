@@ -1,20 +1,13 @@
 import { Component, signal } from '@angular/core';
-import { AlbumCreate } from './album_create';
 import { AlbumReadAll } from './album_read_all';
-import { MatDivider } from '@angular/material/list';
 
 @Component({
   selector: 'album',
   imports: [
-    AlbumCreate,
-    AlbumReadAll,
-    MatDivider
+    AlbumReadAll
   ],
   template: `
-    <h2>Album</h2>
-    <mat-divider />
-    <album-create (created)="albumCreated()" />
-    <mat-divider />
+    <h2>Overview</h2>
     <album-read-all [reloadAlbums]="reloadAlbums()" />
   `,
   styles: `

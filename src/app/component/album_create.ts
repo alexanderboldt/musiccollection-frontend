@@ -1,13 +1,16 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import Keycloak from 'keycloak-js';
 import { HttpClient } from '@angular/common/http';
 import { Api } from '../api';
 import { AlbumRequest } from '../model/album';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
+import { MatIcon } from '@angular/material/icon';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'album-create',
@@ -18,10 +21,18 @@ import { MatSelect } from '@angular/material/select';
     MatInput,
     MatLabel,
     MatOption,
-    MatSelect
+    MatSelect,
+    MatIcon,
+    RouterLink
   ],
   template: `
-    <h3>Create</h3>
+    <button routerLink="/album" matButton>
+      <mat-icon>arrow_back</mat-icon>
+      Back
+    </button>
+
+    <h2>Create</h2>
+
     <form>
       <mat-form-field>
         <mat-label>Artist</mat-label>
@@ -47,6 +58,10 @@ import { MatSelect } from '@angular/material/select';
     </form>
   `,
   styles: `
+    h2 {
+      color: var(--mat-sys-primary);
+    }
+
     mat-form-field {
       margin-right: 16px;
     }
@@ -60,10 +75,10 @@ export class AlbumCreate {
   inputYear = 0;
   inputTracks = 0;
 
-  created = output<boolean>();
-
   private readonly keycloak = inject(Keycloak);
   private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
+  private snackBar = inject(MatSnackBar);
 
   private api = new Api(this.http, this.keycloak);
 
@@ -87,8 +102,8 @@ export class AlbumCreate {
     album.tracks = this.inputTracks;
 
     this.api.createAlbum(album).subscribe(() => {
-      this.inputAlbum = '';
-      this.created.emit(true);
+      this.snackBar.open("Album created successfully.", "", { duration: 3000 });
+      this.router.navigate(["/album"]);
     })
   }
 }

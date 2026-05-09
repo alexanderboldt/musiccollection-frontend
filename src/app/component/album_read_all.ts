@@ -9,6 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { Api } from '../api';
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
+import { MatIcon } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'album-read-all',
@@ -25,11 +27,11 @@ import { MatOption, MatSelect } from '@angular/material/select';
     MatFormField,
     MatLabel,
     MatSelect,
-    MatOption
+    MatOption,
+    MatIcon,
+    RouterLink
   ],
   template: `
-    <h3>Overview</h3>
-
     <div id="sort">
       <mat-form-field>
         <mat-label>Sort</mat-label>
@@ -48,6 +50,11 @@ import { MatOption, MatSelect } from '@angular/material/select';
           }
         </mat-select>
       </mat-form-field>
+
+      <button routerLink="/album/new" matButton>
+        <mat-icon>add_circle_outline</mat-icon>
+        CREATE ALBUM
+      </button>
     </div>
 
     <div id="albumContent">
@@ -84,6 +91,7 @@ import { MatOption, MatSelect } from '@angular/material/select';
     #sort {
       display: flex;
       flex-direction: row;
+      align-items: baseline;
       gap: 16px;
       margin-top: 24px;
     }

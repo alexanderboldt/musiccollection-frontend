@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { Artist } from './component/artist'
 import { ArtistDetail } from './component/artist_detail'
 import { Album } from './component/album'
+import { AlbumCreate } from './component/album_create'
 
 export const routes: Routes = [
   {
@@ -21,5 +22,9 @@ export const routes: Routes = [
   {
     path: 'album',
     component: Album
+  },
+  {
+    path: 'album/new',
+    component: AlbumCreate
   }
 ];
