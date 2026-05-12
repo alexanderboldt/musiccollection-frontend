@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DetailMode } from '../../util/detail_mode';
 
 @Component({
-  selector: 'artist',
+  selector: 'artist-detail',
   imports: [
     FormsModule,
     MatButton,
@@ -53,10 +53,6 @@ import { DetailMode } from '../../util/detail_mode';
     </form>
   `,
   styles: `
-    h2 {
-      color: var(--mat-sys-primary);
-    }
-
     form {
       margin-top: 16px;
       display: grid;
@@ -67,7 +63,7 @@ import { DetailMode } from '../../util/detail_mode';
       width: 500px;
       height: auto;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: var(--mat-sys-corner-medium);
     }
   `
 })

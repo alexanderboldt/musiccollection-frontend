@@ -64,18 +64,16 @@ import { MatDivider } from '@angular/material/list';
     <div id="artistContent">
       @for (artist of artists(); track artist.id) {
         <mat-card appearance="filled">
-          <a routerLink="/artist/{{artist.id}}">
-            <mat-card-content>
-              @if (artist.filename == null) {
-                <img src="/placeholder.svg" alt="Placeholder Image">
-              } @else {
-                <img [src]="downloadArtistImage(artist.id) | async" alt="Image of the Artist">
-              }
-            </mat-card-content>
-            <mat-card-header>
-              <mat-card-title>{{ artist.name }}</mat-card-title>
-            </mat-card-header>
-          </a>
+          <mat-card-content routerLink="/artist/{{artist.id}}">
+            @if (artist.filename == null) {
+              <img src="/placeholder.svg" alt="Placeholder Image">
+            } @else {
+              <img [src]="downloadArtistImage(artist.id) | async" alt="Image of the Artist">
+            }
+          </mat-card-content>
+          <mat-card-header>
+            <mat-card-title>{{ artist.name }}</mat-card-title>
+          </mat-card-header>
           <mat-card-actions>
             <button type="button" (click)="fileInput.click()" matButton>SET IMAGE</button>
             <input type="file" id="file" hidden (change)="uploadArtistImage(artist.id, $event)" #fileInput>
@@ -111,13 +109,14 @@ import { MatDivider } from '@angular/material/list';
     mat-card-content {
       width: 100%;
       height: 250px;
+      cursor: pointer;
     }
 
     img {
       width: 90%;
       height: 100%;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: var(--mat-sys-corner-medium);
     }
   `
 })
