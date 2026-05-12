@@ -7,6 +7,7 @@ import { MatButton } from '@angular/material/button';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DetailMode } from '../../util/detail_mode';
 
 @Component({
   selector: 'artist',
@@ -94,7 +95,7 @@ export class ArtistDetail {
   ngOnInit() {
     this.mode = this.activatedRoute.snapshot.data['mode'];
 
-    if (this.mode === Mode.CREATE) {
+    if (this.mode === DetailMode.CREATE) {
       this.buttonCreateOrUpdateText.set("CREATE");
     } else {
       this.activatedRoute.params.pipe(
@@ -143,9 +144,9 @@ export class ArtistDetail {
   }
 
   createOrUpdateArtist() {
-    if (this.mode === Mode.CREATE) {
+    if (this.mode === DetailMode.CREATE) {
       this.api.createArtist(this.name()).subscribe(artist => {
-        this.mode = Mode.EDIT
+        this.mode = DetailMode.EDIT
 
         this.id = artist.id
 
@@ -168,9 +169,3 @@ export class ArtistDetail {
     });
   }
 }
-
-enum Mode {
-  CREATE = "create",
-  EDIT = "edit"
-}
-

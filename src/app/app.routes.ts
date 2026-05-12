@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
 
-import { Artist } from './component/artist/artist'
-import { ArtistDetail } from './component/artist/artist_detail'
-import { Album } from './component/album/album'
-import { AlbumCreate } from './component/album/album_create'
+import { Artist } from './component/artist/artist';
+import { ArtistDetail } from './component/artist/artist_detail';
+import { Album } from './component/album/album';
+import { AlbumCreate } from './component/album/album_create';
+import { DetailMode } from './util/detail_mode';
 
 export const routes: Routes = [
   {
@@ -18,12 +19,12 @@ export const routes: Routes = [
   {
     path: 'artist/new',
     component: ArtistDetail,
-    data: { mode: 'create' }
+    data: { mode: DetailMode.CREATE }
   },
   {
     path: 'artist/:id',
     component: ArtistDetail,
-    data: { mode: 'edit' }
+    data: { mode: DetailMode.EDIT }
   },
   {
     path: 'album',
