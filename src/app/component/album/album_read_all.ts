@@ -4,7 +4,7 @@ import { Observable, forkJoin } from 'rxjs';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle, MatCardSubtitle } from '@angular/material/card';
 import { MatButton} from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
-import { Api } from '../api';
+import { Api } from '../../api';
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatIcon } from '@angular/material/icon';
@@ -58,7 +58,7 @@ import { MatDivider } from '@angular/material/list';
     </div>
 
     @if (albums().length == 0) {
-      <mat-divider />
+      <mat-divider/>
       <p class="emptyState">No albums found.</p>
     }
     <div id="albumContent">
@@ -137,7 +137,7 @@ export class AlbumReadAll {
   ];
   selectedOrder = this.orderSorts[0].value;
 
-  reloadAlbums = input<boolean>()
+  reloadAlbums = input<boolean>();
 
   protected albums = signal<Album[]>([]);
 
@@ -146,7 +146,7 @@ export class AlbumReadAll {
   private readonly api = inject(Api);
 
   ngOnChanges() {
-    this.readAllAlbums()
+    this.readAllAlbums();
   }
 
   readAllAlbums() {
@@ -155,15 +155,15 @@ export class AlbumReadAll {
       this.api.readAllArtist("id")
     ]).subscribe(([albumResponses, artistResponses]) => {
       const albums = albumResponses.map<Album>(albumResponse => {
-        const album = new Album()
-        album.id = albumResponse.id
-        album.name = albumResponse.name
-        album.artistName = artistResponses.find(artistResponse => artistResponse.id == albumResponse.artistId)?.name!!
-        album.filename = albumResponse.filename
+        const album = new Album();
+        album.id = albumResponse.id;
+        album.name = albumResponse.name;
+        album.artistName = artistResponses.find(artistResponse => artistResponse.id == albumResponse.artistId)?.name!!;
+        album.filename = albumResponse.filename;
 
-        return album
+        return album;
       })
-      this.albums.set(albums)
+      this.albums.set(albums);
     })
   }
 
@@ -188,8 +188,8 @@ export class AlbumReadAll {
 }
 
 class Album {
-  id: number = 0
-  name: string = ''
-  artistName: string = ''
-  filename?: string
+  id: number = 0;
+  name: string = '';
+  artistName: string = '';
+  filename?: string;
 }

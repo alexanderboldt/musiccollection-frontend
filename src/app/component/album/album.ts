@@ -17,9 +17,9 @@ import { AlbumReadAll } from './album_read_all';
   `
 })
 export class Album {
-  reloadAlbums = signal(false)
+  reloadAlbums = signal(false);
 
   albumCreated() {
-    this.reloadAlbums.update(value => !value)
+    this.reloadAlbums.update(value => !value);
   }
 }

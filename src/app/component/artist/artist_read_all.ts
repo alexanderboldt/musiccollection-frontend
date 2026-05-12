@@ -4,10 +4,10 @@ import { Observable } from 'rxjs';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatButton} from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
-import { Api } from '../api';
+import { Api } from '../../api';
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { ArtistResponse } from '../model/artist';
+import { ArtistResponse } from '../../model/artist';
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/list';
@@ -58,7 +58,7 @@ import { MatDivider } from '@angular/material/list';
     </div>
 
     @if (artists().length == 0) {
-      <mat-divider />
+      <mat-divider/>
       <p class="emptyState">No artists found.</p>
     }
     <div id="artistContent">
@@ -134,7 +134,7 @@ export class ArtistReadAll {
   ];
   selectedOrder = this.orderSorts[0].value;
 
-  reloadArtists = input<boolean>()
+  reloadArtists = input<boolean>();
 
   protected artists = signal<ArtistResponse[]>([]);
 
@@ -143,15 +143,15 @@ export class ArtistReadAll {
   private readonly api = inject(Api);
 
   ngOnInit() {
-    this.readAllArtist()
+    this.readAllArtist();
   }
 
   ngOnChanges() {
-    this.readAllArtist()
+    this.readAllArtist();
   }
 
   readAllArtist() {
-    this.api.readAllArtist(this.selectedOrder + this.selectedSort).subscribe(data => this.artists.set(data))
+    this.api.readAllArtist(this.selectedOrder + this.selectedSort).subscribe(data => this.artists.set(data));
   }
 
   deleteArtist(id: number) {

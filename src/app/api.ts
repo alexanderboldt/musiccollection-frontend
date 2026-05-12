@@ -12,7 +12,7 @@ export class Api {
   private artistUrl = `${this.baseUrl}/api/v1/artists`;
   private albumUrl = `${this.baseUrl}/api/v1/albums`;
 
-  private readonly headers: HttpHeaders
+  private readonly headers: HttpHeaders;
 
   constructor(private http: HttpClient, private keycloak: Keycloak) {
     this.headers = new HttpHeaders({
@@ -24,7 +24,7 @@ export class Api {
 
   loadUsername(block: (username: string) => (void)) {
     this.keycloak.loadUserProfile().then(profile => {
-      block(`${profile.firstName} ${profile.lastName}`)
+      block(`${profile.firstName} ${profile.lastName}`);
     });
   }
 
@@ -35,7 +35,7 @@ export class Api {
   // artist routes
 
   createArtist(name: string): Observable<ArtistResponse> {
-    return this.http.post<ArtistResponse>(this.artistUrl, { name: name }, { headers: this.headers })
+    return this.http.post<ArtistResponse>(this.artistUrl, { name: name }, { headers: this.headers });
   }
 
   readAllArtist(sort: string): Observable<Array<ArtistResponse>> {
@@ -43,38 +43,38 @@ export class Api {
   }
 
   readSingleArtist(id: number): Observable<ArtistResponse> {
-    return this.http.get<ArtistResponse>(this.artistUrl + `/${id}`, { headers: this.headers });
+    return this.http.get<ArtistResponse>(`${this.artistUrl}/${id}`, { headers: this.headers });
   }
 
   updateArtist(id: number, name: string): Observable<ArtistResponse> {
-    return this.http.put<ArtistResponse>(this.artistUrl + `/${id}`, { name: name }, { headers: this.headers });
+    return this.http.put<ArtistResponse>(`${this.artistUrl}/${id}`, { name: name }, { headers: this.headers });
   }
 
   deleteArtist(id: number): Observable<any> {
-    return this.http.delete(this.artistUrl + `/${id}`, { headers: this.headers });
+    return this.http.delete(`${this.artistUrl}/${id}`, { headers: this.headers });
   }
 
   uploadArtistImage(id: number, file: File): Observable<any> {
     let formData = new FormData();
-    formData.append('image', file)
+    formData.append('image', file);
 
-    return this.http.post(this.artistUrl + `/${id}/images`, formData, { headers: this.headers })
+    return this.http.post(`${this.artistUrl}/${id}/images`, formData, { headers: this.headers });
   }
 
   downloadArtistImage(id: number): Observable<string> {
     return this.http
-      .get(this.artistUrl + `/${id}/images`, { headers: this.headers,  responseType: 'blob' })
+      .get(`${this.artistUrl}/${id}/images`, { headers: this.headers,  responseType: 'blob' })
       .pipe(map(data => URL.createObjectURL(data)));
   }
 
   deleteArtistImage(id: number): Observable<any> {
-    return this.http.delete(this.artistUrl + `/${id}/images`, { headers: this.headers })
+    return this.http.delete(`${this.artistUrl}/${id}/images`, { headers: this.headers });
   }
 
   // album routes
 
   createAlbum(album: AlbumRequest): Observable<AlbumResponse> {
-    return this.http.post<AlbumResponse>(this.albumUrl, album, { headers: this.headers })
+    return this.http.post<AlbumResponse>(this.albumUrl, album, { headers: this.headers });
   }
 
   readAllAlbums(sort: string): Observable<Array<AlbumResponse>> {
@@ -82,23 +82,23 @@ export class Api {
   }
 
   deleteAlbum(id: number): Observable<any> {
-    return this.http.delete(this.albumUrl + `/${id}`, { headers: this.headers });
+    return this.http.delete(`${this.albumUrl}/${id}`, { headers: this.headers });
   }
 
   uploadAlbumImage(id: number, file: File): Observable<any> {
     let formData = new FormData();
-    formData.append('image', file)
+    formData.append('image', file);
 
-    return this.http.post(this.albumUrl + `/${id}/images`, formData, { headers: this.headers })
+    return this.http.post(`${this.albumUrl}/${id}/images`, formData, { headers: this.headers });
   }
 
   downloadAlbumImage(id: number) : Observable<string> {
     return this.http
-      .get(this.albumUrl + `/${id}/images`, { headers: this.headers,  responseType: 'blob' })
+      .get(`${this.albumUrl}/${id}/images`, { headers: this.headers,  responseType: 'blob' })
       .pipe(map(data => URL.createObjectURL(data)));
   }
 
   deleteAlbumImage(id: number): Observable<any> {
-    return this.http.delete(this.albumUrl + `/${id}/images`, { headers: this.headers })
+    return this.http.delete(`${this.albumUrl}/${id}/images`, { headers: this.headers });
   }
 }

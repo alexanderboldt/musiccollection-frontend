@@ -3,8 +3,8 @@ import { MatButton } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Api } from '../api';
-import { AlbumRequest } from '../model/album';
+import { Api } from '../../api';
+import { AlbumRequest } from '../../model/album';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { MatIcon } from '@angular/material/icon';
@@ -86,7 +86,7 @@ export class AlbumCreate {
   }
 
   isButtonDisabled(): boolean {
-    return this.selectedSort == '' || this.inputAlbum.length == 0 || this.inputYear <= 0 || this.inputTracks <= 0
+    return this.selectedSort == '' || this.inputAlbum.length == 0 || this.inputYear <= 0 || this.inputTracks <= 0;
   }
 
   createAlbum() {

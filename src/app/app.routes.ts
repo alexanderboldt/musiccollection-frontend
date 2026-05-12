@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
 
-import { Artist } from './component/artist'
-import { ArtistCreate } from './component/artist_create'
+import { Artist } from './component/artist/artist'
+import { ArtistCreate } from './component/artist/artist_create'
 import { ArtistDetail } from './component/artist_detail'
-import { Album } from './component/album'
-import { AlbumCreate } from './component/album_create'
+import { Album } from './component/album/album'
+import { AlbumCreate } from './component/album/album_create'
 
 export const routes: Routes = [
   {
