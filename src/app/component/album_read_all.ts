@@ -9,6 +9,7 @@ import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
+import { MatDivider } from '@angular/material/list';
 
 @Component({
   selector: 'album-read-all',
@@ -27,7 +28,8 @@ import { RouterLink } from '@angular/router';
     MatSelect,
     MatOption,
     MatIcon,
-    RouterLink
+    RouterLink,
+    MatDivider
   ],
   template: `
     <div id="sort">
@@ -55,6 +57,10 @@ import { RouterLink } from '@angular/router';
       </button>
     </div>
 
+    @if (albums().length == 0) {
+      <mat-divider />
+      <p class="emptyState">No albums found.</p>
+    }
     <div id="albumContent">
       @for (album of albums(); track album.id) {
         <mat-card appearance="filled">
@@ -92,6 +98,11 @@ import { RouterLink } from '@angular/router';
       align-items: baseline;
       gap: 16px;
       margin-top: 24px;
+    }
+
+    .emptyState {
+      margin-top: 16px;
+      text-align: center;
     }
 
     #albumContent {

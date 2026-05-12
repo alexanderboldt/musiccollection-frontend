@@ -10,6 +10,7 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { ArtistResponse } from '../model/artist';
 import { RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
+import { MatDivider } from '@angular/material/list';
 
 @Component({
   selector: 'artist-read-all',
@@ -26,8 +27,9 @@ import { MatIcon } from '@angular/material/icon';
     MatLabel,
     MatSelect,
     MatOption,
-    RouterLink,
-    MatIcon
+    MatIcon,
+    MatDivider,
+    RouterLink
   ],
   template: `
     <div id="sort">
@@ -55,6 +57,10 @@ import { MatIcon } from '@angular/material/icon';
       </button>
     </div>
 
+    @if (artists().length == 0) {
+      <mat-divider />
+      <p class="emptyState">No artists found.</p>
+    }
     <div id="artistContent">
       @for (artist of artists(); track artist.id) {
         <mat-card appearance="filled">
@@ -89,6 +95,11 @@ import { MatIcon } from '@angular/material/icon';
       align-items: baseline;
       gap: 16px;
       margin-top: 24px;
+    }
+
+    .emptyState {
+      margin-top: 16px;
+      text-align: center;
     }
 
     #artistContent {
