@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Api } from '../../api';
 import { switchMap } from 'rxjs';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
@@ -17,7 +17,6 @@ import { DetailMode } from '../../util/detail_mode';
     MatFormField,
     MatInput,
     MatLabel,
-    ReactiveFormsModule,
     MatIcon,
     RouterLink
   ],
@@ -67,14 +66,14 @@ import { DetailMode } from '../../util/detail_mode';
     }
   `
 })
-export class ArtistDetail {
+export class ArtistDetail{
 
   private readonly api = inject(Api);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
 
-  private mode = ""
+  private mode: DetailMode = DetailMode.CREATE
 
   private id = 0;
 
@@ -95,9 +94,7 @@ export class ArtistDetail {
       this.buttonCreateOrUpdateText.set("CREATE");
     } else {
       this.activatedRoute.params.pipe(
-        switchMap(params => {
-          return this.api.readSingleArtist(params["id"]);
-        })
+        switchMap(params => this.api.readSingleArtist(params["id"]))
       ).subscribe(artist => {
         this.id = artist.id;
 
@@ -142,26 +139,24 @@ export class ArtistDetail {
   createOrUpdateArtist() {
     if (this.mode === DetailMode.CREATE) {
       this.api.createArtist(this.name()).subscribe(artist => {
-        this.mode = DetailMode.EDIT
-
-        this.id = artist.id
-
-        this.isButtonSetImageDisabled.set(false);
-
-        this.buttonCreateOrUpdateText.set("UPDATE");
-        this.isButtonDeleteDisabled.set(false);
-
-        this.snackBar.open(`Artist successfully created.`, "", { duration: 3000 });
+        this.showSnackBar("Artist successfully created.");
+        this.router.navigate(['/artist', artist.id]);
       })
     } else {
-      this.api.updateArtist(this.id, this.name()).subscribe(() => {})
+      this.api
+        .updateArtist(this.id, this.name())
+        .subscribe(() => this.showSnackBar("Artist successfully updated."))
     }
   }
 
   deleteArtist() {
     this.api.deleteArtist(this.id).subscribe(() => {
-      this.snackBar.open(`Artist successfully deleted.`, "", { duration: 3000 });
+      this.showSnackBar("Artist successfully deleted.");
       this.router.navigate(["/artist"]);
     });
+  }
+
+  showSnackBar(message: string) {
+    this.snackBar.open(message, "", { duration: 3000 });
   }
 }
