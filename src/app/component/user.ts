@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { Api } from '../api';
@@ -36,7 +36,7 @@ import { Api } from '../api';
     }
   `
 })
-export class User {
+export class User implements OnInit {
   protected username = signal("");
 
   private readonly api = inject(Api);

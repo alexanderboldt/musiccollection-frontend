@@ -1,4 +1,4 @@
-import { Component, signal, inject, input } from '@angular/core';
+import { Component, signal, inject, input, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
@@ -120,7 +120,7 @@ import { MatDivider } from '@angular/material/list';
     }
   `
 })
-export class ArtistReadAll {
+export class ArtistReadAll implements OnInit {
   fieldSort: Sort[] = [
     {value: 'id', viewValue: 'Created'},
     {value: 'name', viewValue: 'Name'},
@@ -142,10 +142,6 @@ export class ArtistReadAll {
   private readonly api = inject(Api);
 
   ngOnInit() {
-    this.readAllArtist();
-  }
-
-  ngOnChanges() {
     this.readAllArtist();
   }
 

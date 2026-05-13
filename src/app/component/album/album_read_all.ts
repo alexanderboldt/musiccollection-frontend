@@ -1,4 +1,4 @@
-import { Component, signal, inject, input } from '@angular/core';
+import { Component, signal, inject, input, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { Observable, forkJoin } from 'rxjs';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle, MatCardSubtitle } from '@angular/material/card';
@@ -125,7 +125,7 @@ import { MatDivider } from '@angular/material/list';
     }
   `
 })
-export class AlbumReadAll {
+export class AlbumReadAll implements OnInit {
   fieldSort: Sort[] = [
     {value: 'id', viewValue: 'Created'},
     {value: 'name', viewValue: 'Name'},
@@ -146,7 +146,7 @@ export class AlbumReadAll {
 
   private readonly api = inject(Api);
 
-  ngOnChanges() {
+  ngOnInit() {
     this.readAllAlbums();
   }
 

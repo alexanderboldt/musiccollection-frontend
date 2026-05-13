@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Api } from '../../api';
 import { switchMap } from 'rxjs';
@@ -89,7 +89,7 @@ import {AlbumRequest} from '../../model/album';
     }
   `
 })
-export class AlbumDetail {
+export class AlbumDetail implements OnInit {
 
   private readonly api = inject(Api);
   private readonly activatedRoute = inject(ActivatedRoute);

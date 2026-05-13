@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Api } from '../../api';
 import { switchMap } from 'rxjs';
@@ -66,7 +66,7 @@ import { DetailMode } from '../../util/detail_mode';
     }
   `
 })
-export class ArtistDetail{
+export class ArtistDetail implements OnInit{
 
   private readonly api = inject(Api);
   private readonly activatedRoute = inject(ActivatedRoute);
