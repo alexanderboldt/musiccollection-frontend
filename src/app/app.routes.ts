@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 import { Artist } from './component/artist/artist';
 import { ArtistDetail } from './component/artist/artist_detail';
 import { Album } from './component/album/album';
-import { AlbumCreate } from './component/album/album_create';
+import { AlbumDetail } from './component/album/album_detail';
 import { DetailMode } from './util/detail_mode';
 
 export const routes: Routes = [
@@ -32,6 +32,12 @@ export const routes: Routes = [
   },
   {
     path: 'album/new',
-    component: AlbumCreate
+    component: AlbumDetail,
+    data: { mode: DetailMode.CREATE }
+  },
+  {
+    path: 'album/:id',
+    component: AlbumDetail,
+    data: { mode: DetailMode.EDIT }
   }
 ];

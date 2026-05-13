@@ -10,4 +10,6 @@ export class AlbumResponse {
   artistId: number = 0
   name: string = ''
   filename?: string
+  year: number = 0
+  tracks: number = 0
 }

@@ -64,7 +64,7 @@ import { MatDivider } from '@angular/material/list';
     <div id="albumContent">
       @for (album of albums(); track album.id) {
         <mat-card appearance="filled">
-          <mat-card-content>
+          <mat-card-content routerLink="/album/{{album.id}}">
             @if (album.filename == null) {
               <img src="/placeholder.svg" alt="Placeholder Image">
             } @else {
@@ -114,13 +114,14 @@ import { MatDivider } from '@angular/material/list';
     mat-card-content {
       width: 100%;
       height: 250px;
+      cursor: pointer;
     }
 
     img {
       width: 90%;
       height: 100%;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: var(--mat-sys-corner-medium);
     }
   `
 })
