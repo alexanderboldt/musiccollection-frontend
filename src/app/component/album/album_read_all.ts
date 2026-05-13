@@ -34,6 +34,16 @@ import { MatDivider } from '@angular/material/list';
   template: `
     <div id="sort">
       <mat-form-field>
+        <mat-label>Artist</mat-label>
+        <mat-select [(value)]="selectedArtist" (valueChange)="readAllAlbums()">
+          <mat-option></mat-option>
+          @for (option of artistSort; track option) {
+            <mat-option [value]="option.value">{{ option.viewValue }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
         <mat-label>Sort</mat-label>
         <mat-select [(value)]="selectedSort" (valueChange)="readAllAlbums()">
           @for (option of fieldSort; track option) {
@@ -126,6 +136,9 @@ import { MatDivider } from '@angular/material/list';
   `
 })
 export class AlbumReadAll implements OnInit {
+  artistSort: Sort[] = [];
+  selectedArtist = undefined;
+
   fieldSort: Sort[] = [
     {value: 'id', viewValue: 'Created'},
     {value: 'name', viewValue: 'Name'},
@@ -145,25 +158,46 @@ export class AlbumReadAll implements OnInit {
   private readonly api = inject(Api);
 
   ngOnInit() {
+    this.api.readAllArtist("name").subscribe(artists => {
+      for (const artist of artists) {
+        this.artistSort.push({ value: artist.id.toString(), viewValue: artist.name });
+      }
+    });
+
     this.readAllAlbums();
   }
 
   readAllAlbums() {
-    forkJoin([
-      this.api.readAllAlbums(this.selectedOrder + this.selectedSort),
-      this.api.readAllArtist("id")
-    ]).subscribe(([albumResponses, artistResponses]) => {
-      const albums = albumResponses.map<Album>(albumResponse => {
-        const album = new Album();
-        album.id = albumResponse.id;
-        album.name = albumResponse.name;
-        album.artistName = artistResponses.find(artistResponse => artistResponse.id == albumResponse.artistId)?.name!!;
-        album.filename = albumResponse.filename;
+    if (this.selectedArtist != undefined) {
+      this.api.readArtistAlbums(Number.parseInt(this.selectedArtist), this.selectedOrder + this.selectedSort).subscribe(albumResponses => {
+        const albums = albumResponses.map<Album>(albumResponse => {
+          const album = new Album();
+          album.id = albumResponse.id;
+          album.name = albumResponse.name;
+          album.artistName = this.artistSort.find(artist => artist.value == this.selectedArtist)!!.viewValue;
+          album.filename = albumResponse.filename;
 
-        return album;
+          return album;
+        })
+        this.albums.set(albums);
       })
-      this.albums.set(albums);
-    })
+    } else {
+      forkJoin([
+        this.api.readAllAlbums(this.selectedOrder + this.selectedSort),
+        this.api.readAllArtist("id")
+      ]).subscribe(([albumResponses, artistResponses]) => {
+        const albums = albumResponses.map<Album>(albumResponse => {
+          const album = new Album();
+          album.id = albumResponse.id;
+          album.name = albumResponse.name;
+          album.artistName = artistResponses.find(artistResponse => artistResponse.id == albumResponse.artistId)?.name!!;
+          album.filename = albumResponse.filename;
+
+          return album;
+        })
+        this.albums.set(albums);
+      })
+    }
   }
 
   deleteAlbum(id: number) {

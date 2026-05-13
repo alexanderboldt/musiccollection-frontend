@@ -81,6 +81,10 @@ export class Api {
     return this.http.get<Array<AlbumResponse>>(this.albumUrl, { headers: this.headers, params: { sort: sort } });
   }
 
+  readArtistAlbums(id: number, sort: string): Observable<Array<AlbumResponse>> {
+    return this.http.get<Array<AlbumResponse>>(`${this.artistUrl}/${id}/albums`, { headers: this.headers, params: { sort: sort } });
+  }
+
   readSingleAlbum(id: number): Observable<AlbumResponse> {
     return this.http.get<AlbumResponse>(`${this.albumUrl}/${id}`, { headers: this.headers });
   }
