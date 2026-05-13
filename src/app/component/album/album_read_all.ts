@@ -1,4 +1,4 @@
-import { Component, signal, inject, input, OnInit } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { Observable, forkJoin } from 'rxjs';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle, MatCardSubtitle } from '@angular/material/card';
@@ -137,8 +137,6 @@ export class AlbumReadAll implements OnInit {
     {value: '-', viewValue: 'DESC'},
   ];
   selectedOrder = this.orderSorts[0].value;
-
-  reloadAlbums = input<boolean>();
 
   protected albums = signal<Album[]>([]);
 

@@ -6,7 +6,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { DetailMode } from '../../util/detail_mode';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
@@ -173,25 +172,19 @@ export class AlbumDetail implements OnInit {
   }
 
   createOrUpdateAlbum() {
-    if (this.mode === DetailMode.CREATE) {
-      let album = new AlbumRequest();
-      album.artistId = Number.parseFloat(this.artist());
-      album.name = this.name();
-      album.year = this.year();
-      album.tracks = this.tracks();
+    let album = new AlbumRequest();
+    album.artistId = Number.parseFloat(this.artist());
+    album.name = this.name();
+    album.year = this.year();
+    album.tracks = this.tracks();
 
+    if (this.mode === DetailMode.CREATE) {
       this.api.createAlbum(album).subscribe(album => {
         this.snackBar.show("Album successfully created.");
         this.router.navigate(['/album', album.id]);
       })
     } else {
-      let album = new AlbumRequest();
-      album.artistId = Number.parseFloat(this.artist());
-      album.name = this.name();
-      album.year = this.year();
-      album.tracks = this.tracks();
-
-      this.api.updateAlbum(this.id, album).subscribe(album => {
+      this.api.updateAlbum(this.id, album).subscribe(() => {
         this.snackBar.show("Album successfully updated.");
       })
     }

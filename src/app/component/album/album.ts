@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { AlbumReadAll } from './album_read_all';
 
 @Component({
@@ -7,8 +7,8 @@ import { AlbumReadAll } from './album_read_all';
     AlbumReadAll
   ],
   template: `
-    <h2>Overview</h2>
-    <album-read-all [reloadAlbums]="reloadAlbums()" />
+    <h2>Albums</h2>
+    <album-read-all />
   `,
   styles: `
     h2 {
@@ -16,10 +16,4 @@ import { AlbumReadAll } from './album_read_all';
     }
   `
 })
-export class Album {
-  reloadAlbums = signal(false);
-
-  albumCreated() {
-    this.reloadAlbums.update(value => !value);
-  }
-}
+export class Album {}

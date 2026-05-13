@@ -1,4 +1,4 @@
-import { Component, signal, inject, input, OnInit } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
@@ -132,8 +132,6 @@ export class ArtistReadAll implements OnInit {
     {value: '-', viewValue: 'DESC'},
   ];
   selectedOrder = this.orderSorts[0].value;
-
-  reloadArtists = input<boolean>();
 
   protected artists = signal<ArtistResponse[]>([]);
 

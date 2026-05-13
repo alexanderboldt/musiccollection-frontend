@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { ArtistReadAll } from './artist_read_all';
 
 @Component({
@@ -7,8 +7,8 @@ import { ArtistReadAll } from './artist_read_all';
     ArtistReadAll
   ],
   template: `
-    <h2>Overview</h2>
-    <artist-read-all [reloadArtists]="reloadArtists()" />
+    <h2>Artists</h2>
+    <artist-read-all />
   `,
   styles: `
     h2 {
@@ -16,10 +16,4 @@ import { ArtistReadAll } from './artist_read_all';
     }
   `
 })
-export class Artist {
-  reloadArtists = signal(false);
-
-  artistCreated() {
-    this.reloadArtists.update(value => !value);
-  }
-}
+export class Artist {}
