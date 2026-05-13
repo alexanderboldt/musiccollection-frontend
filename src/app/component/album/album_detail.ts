@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Api } from '../../api';
 import { switchMap } from 'rxjs';
@@ -10,7 +10,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DetailMode } from '../../util/detail_mode';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
-import {AlbumRequest} from '../../model/album';
+import { AlbumRequest } from '../../model/album';
+import { SnackBarUtils } from '../../util/snackbar_utils';
 
 @Component({
   selector: 'album-detail',
@@ -94,7 +95,7 @@ export class AlbumDetail implements OnInit {
   private readonly api = inject(Api);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly snackBar = inject(SnackBarUtils);
 
   artistsSelect: Sort[] = [];
 
@@ -180,7 +181,7 @@ export class AlbumDetail implements OnInit {
       album.tracks = this.tracks();
 
       this.api.createAlbum(album).subscribe(album => {
-        this.showSnackBar("Album successfully created.");
+        this.snackBar.show("Album successfully created.");
         this.router.navigate(['/album', album.id]);
       })
     } else {
@@ -191,19 +192,15 @@ export class AlbumDetail implements OnInit {
       album.tracks = this.tracks();
 
       this.api.updateAlbum(this.id, album).subscribe(album => {
-        this.showSnackBar("Album successfully updated.");
+        this.snackBar.show("Album successfully updated.");
       })
     }
   }
 
   deleteAlbum() {
     this.api.deleteAlbum(this.id).subscribe(() => {
-      this.showSnackBar("Album successfully deleted.");
+      this.snackBar.show("Album successfully deleted.");
       this.router.navigate(["/album"]);
     });
-  }
-
-  showSnackBar(message: string) {
-    this.snackBar.open(message, "", { duration: 3000 });
   }
 }

@@ -6,8 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { DetailMode } from '../../util/detail_mode';
+import { SnackBarUtils } from '../../util/snackbar_utils';
 
 @Component({
   selector: 'artist-detail',
@@ -71,7 +71,7 @@ export class ArtistDetail implements OnInit{
   private readonly api = inject(Api);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly snackBar = inject(SnackBarUtils);
 
   private mode: DetailMode = DetailMode.CREATE
 
@@ -139,24 +139,20 @@ export class ArtistDetail implements OnInit{
   createOrUpdateArtist() {
     if (this.mode === DetailMode.CREATE) {
       this.api.createArtist(this.name()).subscribe(artist => {
-        this.showSnackBar("Artist successfully created.");
+        this.snackBar.show("Artist successfully created.");
         this.router.navigate(['/artist', artist.id]);
       })
     } else {
       this.api
         .updateArtist(this.id, this.name())
-        .subscribe(() => this.showSnackBar("Artist successfully updated."))
+        .subscribe(() => this.snackBar.show("Artist successfully updated."))
     }
   }
 
   deleteArtist() {
     this.api.deleteArtist(this.id).subscribe(() => {
-      this.showSnackBar("Artist successfully deleted.");
+      this.snackBar.show("Artist successfully deleted.");
       this.router.navigate(["/artist"]);
     });
-  }
-
-  showSnackBar(message: string) {
-    this.snackBar.open(message, "", { duration: 3000 });
   }
 }
