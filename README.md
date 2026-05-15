@@ -3,11 +3,19 @@
 This is a frontend application for managing the music-library like artists and albums.
 
 ## :framed_picture: Screenshots
-### Artist Page
-![Artist Page](screenshots/artist.png)
+### Artist
+### Overview
+![Artist Overview](screenshots/artist_overview.png)
 
-### Album Page
-![Album Page](screenshots/album.png)
+### Detail
+![Artist Detail](screenshots/artist_detail.png)
+
+### Album
+### Overview
+![Album Overview](screenshots/album_overview.png)
+
+### Detail
+![Album Detail](screenshots/album_detail.png)
 
 ## :computer: Tech-Stack
 
