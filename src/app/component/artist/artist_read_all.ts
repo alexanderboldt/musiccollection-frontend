@@ -8,9 +8,10 @@ import { Api } from '../../api';
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { ArtistResponse } from '../../model/artist';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/list';
+import { Option } from '../../util/option'
 
 @Component({
   selector: 'artist-read-all',
@@ -36,16 +37,7 @@ import { MatDivider } from '@angular/material/list';
       <mat-form-field>
         <mat-label>Sort</mat-label>
         <mat-select [(value)]="selectedSort" (valueChange)="readAllArtist()">
-          @for (option of fieldSort; track option) {
-            <mat-option [value]="option.value">{{ option.viewValue }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Order</mat-label>
-        <mat-select [(value)]="selectedOrder" (valueChange)="readAllArtist()">
-          @for (option of orderSorts; track option) {
+          @for (option of sortOptions; track option) {
             <mat-option [value]="option.value">{{ option.viewValue }}</mat-option>
           }
         </mat-select>
@@ -121,30 +113,39 @@ import { MatDivider } from '@angular/material/list';
   `
 })
 export class ArtistReadAll implements OnInit {
-  fieldSort: Sort[] = [
-    {value: 'id', viewValue: 'Created'},
-    {value: 'name', viewValue: 'Name'},
+  sortOptions: Option[] = [
+    { value: 'id', viewValue: 'Created First' },
+    { value: '-id', viewValue: 'Created Last' },
+    { value: 'name', viewValue: 'Name A-Z' },
+    { value: '-name', viewValue: 'Name Z-A' }
   ];
-  selectedSort = this.fieldSort[0].value;
-
-  orderSorts: Sort[] = [
-    {value: '', viewValue: 'ASC'},
-    {value: '-', viewValue: 'DESC'},
-  ];
-  selectedOrder = this.orderSorts[0].value;
+  selectedSort = '';
 
   protected artists = signal<ArtistResponse[]>([]);
 
   imageUrlMap = new Map<number, Observable<string>>();
 
   private readonly api = inject(Api);
+  private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly router = inject(Router);
 
   ngOnInit() {
-    this.readAllArtist();
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.selectedSort = this.sortOptions.find(options => options.value === params['sort'])?.value || this.sortOptions[0].value;
+      this.readAllArtist();
+    });
   }
 
   readAllArtist() {
-    this.api.readAllArtist(this.selectedOrder + this.selectedSort).subscribe(data => this.artists.set(data));
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        sort: this.selectedSort
+      },
+      queryParamsHandling: 'merge'
+    });
+
+    this.api.readAllArtist(this.selectedSort).subscribe(data => this.artists.set(data));
   }
 
   deleteArtist(id: number) {
