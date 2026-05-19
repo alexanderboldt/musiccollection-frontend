@@ -1,6 +1,7 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, signal, inject, OnInit, DestroyRef } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, switchMap, tap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle, MatCardSubtitle } from '@angular/material/card';
 import { MatButton} from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
@@ -36,9 +37,9 @@ import { Option } from '../../util/option'
     <div id="sort">
       <mat-form-field>
         <mat-label>Filter</mat-label>
-        <mat-select [(value)]="selectedFilter" (valueChange)="readAllAlbums()">
-          <mat-option></mat-option>
-          @for (option of artistFilter; track option) {
+        <mat-select [(value)]="selectedFilter" (valueChange)="onFilterSelectionChange()">
+          <mat-option>--</mat-option>
+          @for (option of filterOptions; track option) {
             <mat-option [value]="option.value">{{ option.viewValue }}</mat-option>
           }
         </mat-select>
@@ -46,7 +47,7 @@ import { Option } from '../../util/option'
 
       <mat-form-field>
         <mat-label>Sort</mat-label>
-        <mat-select [(value)]="selectedSort" (valueChange)="readAllAlbums()">
+        <mat-select [(value)]="selectedSort" (valueChange)="onSortSelectionChange()">
           @for (option of sortOptions; track option) {
             <mat-option [value]="option.value">{{ option.viewValue }}</mat-option>
           }
@@ -128,10 +129,10 @@ import { Option } from '../../util/option'
   `
 })
 export class AlbumReadAll implements OnInit {
-  artistFilter: Option[] = [];
-  selectedFilter?: string = undefined;
+  protected filterOptions: Option[] = [];
+  protected selectedFilter?: string = undefined;
 
-  sortOptions: Option[] = [
+  protected sortOptions: Option[] = [
     { value: 'id', viewValue: 'Created First' },
     { value: '-id', viewValue: 'Created Last' },
     { value: 'name', viewValue: 'Name A-Z' },
@@ -139,27 +140,47 @@ export class AlbumReadAll implements OnInit {
     { value: '-year', viewValue: 'Year Newest' },
     { value: 'year', viewValue: 'Year Oldest' },
   ];
-  selectedSort = '';
+  protected selectedSort = '';
 
   protected albums = signal<Album[]>([]);
 
-  imageUrlMap = new Map<number, Observable<string>>();
+  private imageUrlMap = new Map<number, Observable<string>>();
 
   private readonly api = inject(Api);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
 
   ngOnInit() {
-    this.api.readAllArtist("name").subscribe(artists => {
-      for (const artist of artists) {
-        this.artistFilter.push({ value: artist.id.toString(), viewValue: artist.name });
-      }
+    // Initialize filter options and subscribe to query params
+    this.api.readAllArtist("name").pipe(
+      tap(artists => {
+        artists.forEach(artist => {
+          this.filterOptions.push({ value: artist.id.toString(), viewValue: artist.name });
+        });
+      }),
+      switchMap(() => this.activatedRoute.queryParams),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(params => {
+      this.selectedFilter = this.filterOptions.find(options => options.value === params['filter'])?.value || undefined;
+      this.selectedSort = this.sortOptions.find(options => options.value === params['sort'])?.value || this.sortOptions[0].value;
+      this.fetchAlbums();
+    });
+  }
 
-      this.activatedRoute.queryParams.subscribe(params => {
-        this.selectedFilter = this.artistFilter.find(options => options.value === params['filter'])?.value || undefined;
-        this.selectedSort = this.sortOptions.find(options => options.value === params['sort'])?.value || this.sortOptions[0].value;
-        this.readAllAlbums();
-      });
+  onFilterSelectionChange() {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { filter: this.selectedFilter },
+      queryParamsHandling: 'merge'
+    });
+  }
+
+  onSortSelectionChange() {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { sort: this.selectedSort },
+      queryParamsHandling: 'merge'
     });
   }
 
@@ -172,37 +193,7 @@ export class AlbumReadAll implements OnInit {
       },
       queryParamsHandling: 'merge'
     });
-
-    if (this.selectedFilter != undefined) {
-      this.api.readArtistAlbums(Number.parseInt(this.selectedFilter), this.selectedSort).subscribe(albumResponses => {
-        const albums = albumResponses.map<Album>(albumResponse => {
-          const album = new Album();
-          album.id = albumResponse.id;
-          album.name = albumResponse.name;
-          album.artistName = this.artistFilter.find(artist => artist.value == this.selectedFilter)!!.viewValue;
-          album.filename = albumResponse.filename;
-
-          return album;
-        })
-        this.albums.set(albums);
-      })
-    } else {
-      forkJoin([
-        this.api.readAllAlbums(this.selectedSort),
-        this.api.readAllArtist("id")
-      ]).subscribe(([albumResponses, artistResponses]) => {
-        const albums = albumResponses.map<Album>(albumResponse => {
-          const album = new Album();
-          album.id = albumResponse.id;
-          album.name = albumResponse.name;
-          album.artistName = artistResponses.find(artistResponse => artistResponse.id == albumResponse.artistId)?.name!!;
-          album.filename = albumResponse.filename;
-
-          return album;
-        })
-        this.albums.set(albums);
-      })
-    }
+    this.fetchAlbums();
   }
 
   deleteAlbum(id: number) {
@@ -222,6 +213,40 @@ export class AlbumReadAll implements OnInit {
 
   deleteAlbumImage(id: number) {
     this.api.deleteAlbumImage(id).subscribe(() => this.readAllAlbums());
+  }
+
+  private fetchAlbums() {
+    if (this.selectedFilter != undefined) {
+      this.api.readArtistAlbums(Number.parseInt(this.selectedFilter), this.selectedSort)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(albumResponses => {
+          const albums = albumResponses.map<Album>(albumResponse => {
+            const album = new Album();
+            album.id = albumResponse.id;
+            album.name = albumResponse.name;
+            album.artistName = this.filterOptions.find(artist => artist.value == this.selectedFilter)!!.viewValue;
+            album.filename = albumResponse.filename;
+            return album;
+          })
+          this.albums.set(albums);
+        })
+    } else {
+      forkJoin([
+        this.api.readAllAlbums(this.selectedSort),
+        this.api.readAllArtist("id")
+      ]).pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(([albumResponses, artistResponses]) => {
+          const albums = albumResponses.map<Album>(albumResponse => {
+            const album = new Album();
+            album.id = albumResponse.id;
+            album.name = albumResponse.name;
+            album.artistName = artistResponses.find(artistResponse => artistResponse.id == albumResponse.artistId)?.name!!;
+            album.filename = albumResponse.filename;
+            return album;
+          })
+          this.albums.set(albums);
+        })
+    }
   }
 }
 
