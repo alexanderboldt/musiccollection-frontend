@@ -11,6 +11,7 @@ import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { AlbumRequest } from '../../model/album';
 import { SnackBarUtils } from '../../util/snackbar_utils';
+import { Option } from '../../util/option'
 
 @Component({
   selector: 'album-detail',
@@ -96,7 +97,7 @@ export class AlbumDetail implements OnInit {
   private readonly router = inject(Router);
   private readonly snackBar = inject(SnackBarUtils);
 
-  artistsSelect: Sort[] = [];
+  artistsSelect: Option[] = [];
 
   private mode: DetailMode = DetailMode.CREATE
 

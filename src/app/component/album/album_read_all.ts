@@ -8,8 +8,9 @@ import { Api } from '../../api';
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatIcon } from '@angular/material/icon';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatDivider } from '@angular/material/list';
+import { Option } from '../../util/option'
 
 @Component({
   selector: 'album-read-all',
@@ -34,10 +35,10 @@ import { MatDivider } from '@angular/material/list';
   template: `
     <div id="sort">
       <mat-form-field>
-        <mat-label>Artist</mat-label>
-        <mat-select [(value)]="selectedArtist" (valueChange)="readAllAlbums()">
+        <mat-label>Filter</mat-label>
+        <mat-select [(value)]="selectedFilter" (valueChange)="readAllAlbums()">
           <mat-option></mat-option>
-          @for (option of artistSort; track option) {
+          @for (option of artistFilter; track option) {
             <mat-option [value]="option.value">{{ option.viewValue }}</mat-option>
           }
         </mat-select>
@@ -46,16 +47,7 @@ import { MatDivider } from '@angular/material/list';
       <mat-form-field>
         <mat-label>Sort</mat-label>
         <mat-select [(value)]="selectedSort" (valueChange)="readAllAlbums()">
-          @for (option of fieldSort; track option) {
-            <mat-option [value]="option.value">{{ option.viewValue }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Order</mat-label>
-        <mat-select [(value)]="selectedOrder" (valueChange)="readAllAlbums()">
-          @for (option of orderSorts; track option) {
+          @for (option of sortOptions; track option) {
             <mat-option [value]="option.value">{{ option.viewValue }}</mat-option>
           }
         </mat-select>
@@ -136,45 +128,58 @@ import { MatDivider } from '@angular/material/list';
   `
 })
 export class AlbumReadAll implements OnInit {
-  artistSort: Sort[] = [];
-  selectedArtist = undefined;
+  artistFilter: Option[] = [];
+  selectedFilter?: string = undefined;
 
-  fieldSort: Sort[] = [
-    {value: 'id', viewValue: 'Created'},
-    {value: 'name', viewValue: 'Name'},
+  sortOptions: Option[] = [
+    { value: 'id', viewValue: 'Created First' },
+    { value: '-id', viewValue: 'Created Last' },
+    { value: 'name', viewValue: 'Name A-Z' },
+    { value: '-name', viewValue: 'Name Z-A' },
+    { value: '-year', viewValue: 'Year Newest' },
+    { value: 'year', viewValue: 'Year Oldest' },
   ];
-  selectedSort = this.fieldSort[0].value;
-
-  orderSorts: Sort[] = [
-    {value: '', viewValue: 'ASC'},
-    {value: '-', viewValue: 'DESC'},
-  ];
-  selectedOrder = this.orderSorts[0].value;
+  selectedSort = '';
 
   protected albums = signal<Album[]>([]);
 
   imageUrlMap = new Map<number, Observable<string>>();
 
   private readonly api = inject(Api);
+  private readonly router = inject(Router);
+  private readonly activatedRoute = inject(ActivatedRoute);
 
   ngOnInit() {
     this.api.readAllArtist("name").subscribe(artists => {
       for (const artist of artists) {
-        this.artistSort.push({ value: artist.id.toString(), viewValue: artist.name });
+        this.artistFilter.push({ value: artist.id.toString(), viewValue: artist.name });
       }
-    });
 
-    this.readAllAlbums();
+      this.activatedRoute.queryParams.subscribe(params => {
+        this.selectedFilter = this.artistFilter.find(options => options.value === params['filter'])?.value || undefined;
+        this.selectedSort = this.sortOptions.find(options => options.value === params['sort'])?.value || this.sortOptions[0].value;
+        this.readAllAlbums();
+      });
+    });
   }
 
   readAllAlbums() {
-    if (this.selectedArtist != undefined) {
-      this.api.readArtistAlbums(Number.parseInt(this.selectedArtist), this.selectedOrder + this.selectedSort).subscribe(albumResponses => {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        filter: this.selectedFilter,
+        sort: this.selectedSort
+      },
+      queryParamsHandling: 'merge'
+    });
+
+    if (this.selectedFilter != undefined) {
+      this.api.readArtistAlbums(Number.parseInt(this.selectedFilter), this.selectedSort).subscribe(albumResponses => {
         const albums = albumResponses.map<Album>(albumResponse => {
           const album = new Album();
           album.id = albumResponse.id;
           album.name = albumResponse.name;
-          album.artistName = this.artistSort.find(artist => artist.value == this.selectedArtist)!!.viewValue;
+          album.artistName = this.artistFilter.find(artist => artist.value == this.selectedFilter)!!.viewValue;
           album.filename = albumResponse.filename;
 
           return album;
@@ -183,7 +188,7 @@ export class AlbumReadAll implements OnInit {
       })
     } else {
       forkJoin([
-        this.api.readAllAlbums(this.selectedOrder + this.selectedSort),
+        this.api.readAllAlbums(this.selectedSort),
         this.api.readAllArtist("id")
       ]).subscribe(([albumResponses, artistResponses]) => {
         const albums = albumResponses.map<Album>(albumResponse => {
