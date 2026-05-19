@@ -13,6 +13,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/list';
 import { Option } from '../../util/option'
+import { Parameter} from '../../util/parameter'
 
 @Component({
   selector: 'artist-read-all',
@@ -136,7 +137,7 @@ export class ArtistReadAll implements OnInit {
     this.activatedRoute.queryParams.pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(params => {
-      this.selectedSort = this.sortOptions.find(options => options.value === params['sort'])?.value || this.sortOptions[0].value;
+      this.selectedSort = this.sortOptions.find(options => options.value === params[Parameter.SORT])?.value || this.sortOptions[0].value;
       this.fetchArtists();
     });
   }
