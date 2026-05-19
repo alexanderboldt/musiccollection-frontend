@@ -2,7 +2,6 @@ import { Component, signal, inject, OnInit, DestroyRef } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { Observable, forkJoin, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle, MatCardSubtitle } from '@angular/material/card';
 import { MatButton} from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { Api } from '../../api';
@@ -13,26 +12,22 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatDivider } from '@angular/material/list';
 import { Option } from '../../util/option'
 import { Parameter} from '../../util/parameter'
+import { Card } from '../card';
 
 @Component({
   selector: 'album-read-all',
   imports: [
     MatButton,
-    MatCard,
     FormsModule,
     AsyncPipe,
-    MatCardActions,
-    MatCardContent,
-    MatCardHeader,
-    MatCardTitle,
-    MatCardSubtitle,
     MatFormField,
     MatLabel,
     MatSelect,
     MatOption,
     MatIcon,
     RouterLink,
-    MatDivider
+    MatDivider,
+    Card
   ],
   template: `
     <div id="sort">
@@ -67,35 +62,18 @@ import { Parameter} from '../../util/parameter'
     }
     <div id="albumContent">
       @for (album of albums(); track album.id) {
-        <mat-card appearance="filled">
-          <mat-card-content routerLink="/album/{{album.id}}">
-            @if (album.filename == null) {
-              <img src="/placeholder.svg" alt="Placeholder Image">
-            } @else {
-              <img [src]="downloadAlbumImage(album.id) | async" alt="Image of the Album">
-            }
-          </mat-card-content>
-          <mat-card-header>
-            <mat-card-title>{{ album.name }}</mat-card-title>
-            <mat-card-subtitle>{{ album.artistName }}</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-actions>
-            <button type="button" (click)="fileInput.click()" matButton>SET IMAGE</button>
-            <input type="file" id="file" hidden (change)="uploadAlbumImage(album.id, $event)" #fileInput>
-
-            <button (click)="deleteAlbumImage(album.id)" matButton>DELETE IMAGE</button>
-
-            <button (click)="deleteAlbum(album.id)" matButton>DELETE</button>
-          </mat-card-actions>
-        </mat-card>
+        <card
+          detailRoute="/album/{{album.id}}"
+          [image]="album.filename ? (downloadAlbumImage(album.id) | async) : null"
+          [title]="album.name"
+          [subtitle]="album.artistName"
+          (uploadImage)="uploadAlbumImage(album.id, $event)"
+          (deleteImage)="deleteAlbumImage(album.id)"
+          (delete)="deleteAlbum(album.id)" />
       }
     </div>
   `,
   styles: `
-    h2 {
-      color: var(--mat-sys-primary);
-    }
-
     #sort {
       display: flex;
       flex-direction: row;
@@ -113,19 +91,6 @@ import { Parameter} from '../../util/parameter'
       display: grid;
       grid-template-columns: repeat(4, 350px);
       grid-gap: 16px;
-    }
-
-    mat-card-content {
-      width: 100%;
-      height: 250px;
-      cursor: pointer;
-    }
-
-    img {
-      width: 90%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: var(--mat-sys-corner-medium);
     }
   `
 })

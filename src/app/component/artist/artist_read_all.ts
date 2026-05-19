@@ -2,7 +2,6 @@ import { Component, signal, inject, OnInit, DestroyRef } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatButton} from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { Api } from '../../api';
@@ -14,25 +13,22 @@ import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/list';
 import { Option } from '../../util/option'
 import { Parameter} from '../../util/parameter'
+import { Card } from '../card';
 
 @Component({
   selector: 'artist-read-all',
   imports: [
     MatButton,
-    MatCard,
     FormsModule,
     AsyncPipe,
-    MatCardActions,
-    MatCardContent,
-    MatCardHeader,
-    MatCardTitle,
     MatFormField,
     MatLabel,
     MatSelect,
     MatOption,
     MatIcon,
     MatDivider,
-    RouterLink
+    RouterLink,
+    Card
   ],
   template: `
     <div id="sort">
@@ -57,26 +53,13 @@ import { Parameter} from '../../util/parameter'
     }
     <div id="artistContent">
       @for (artist of artists(); track artist.id) {
-        <mat-card appearance="filled">
-          <mat-card-content routerLink="/artist/{{artist.id}}">
-            @if (artist.filename == null) {
-              <img src="/placeholder.svg" alt="Placeholder Image">
-            } @else {
-              <img [src]="downloadArtistImage(artist.id) | async" alt="Image of the Artist">
-            }
-          </mat-card-content>
-          <mat-card-header>
-            <mat-card-title>{{ artist.name }}</mat-card-title>
-          </mat-card-header>
-          <mat-card-actions>
-            <button type="button" (click)="fileInput.click()" matButton>SET IMAGE</button>
-            <input type="file" id="file" hidden (change)="uploadArtistImage(artist.id, $event)" #fileInput>
-
-            <button (click)="deleteArtistImage(artist.id)" matButton>DELETE IMAGE</button>
-
-            <button (click)="deleteArtist(artist.id)" matButton>DELETE</button>
-          </mat-card-actions>
-        </mat-card>
+        <card
+          detailRoute="/artist/{{artist.id}}"
+          [image]="artist.filename ? (downloadArtistImage(artist.id) | async) : null"
+          [title]="artist.name"
+          (uploadImage)="uploadArtistImage(artist.id, $event)"
+          (deleteImage)="deleteArtistImage(artist.id)"
+          (delete)="deleteArtist(artist.id)" />
       }
     </div>
   `,
@@ -98,19 +81,6 @@ import { Parameter} from '../../util/parameter'
       display: grid;
       grid-template-columns: repeat(4, 350px);
       grid-gap: 16px;
-    }
-
-    mat-card-content {
-      width: 100%;
-      height: 250px;
-      cursor: pointer;
-    }
-
-    img {
-      width: 90%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: var(--mat-sys-corner-medium);
     }
   `
 })
