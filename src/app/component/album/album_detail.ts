@@ -13,6 +13,7 @@ import { AlbumRequest } from '../../model/album';
 import { SnackBarUtils } from '../../util/snackbar_utils';
 import { Option } from '../../util/option'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CONSTANTS } from '../../util/constants';
 
 @Component({
   selector: 'album-detail',
@@ -99,9 +100,9 @@ export class AlbumDetail implements OnInit {
   private readonly snackBar = inject(SnackBarUtils);
   private readonly destroyRef = inject(DestroyRef);
 
-  artistsSelect: Option[] = [];
+  protected artistsSelect: Option[] = [];
 
-  private mode: DetailMode = DetailMode.CREATE
+  private mode: DetailMode = DetailMode.CREATE;
 
   private id = 0;
 
@@ -118,7 +119,7 @@ export class AlbumDetail implements OnInit {
   isButtonDeleteDisabled = signal(true);
 
   ngOnInit() {
-    this.mode = this.activatedRoute.snapshot.data['mode'];
+    this.mode = this.activatedRoute.snapshot.data["mode"];
 
     this.api.readAllArtist("id")
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -127,7 +128,7 @@ export class AlbumDetail implements OnInit {
       });
 
     if (this.mode === DetailMode.CREATE) {
-      this.buttonCreateOrUpdateText.set("CREATE");
+      this.buttonCreateOrUpdateText.set(CONSTANTS.BUTTON.CREATE);
     } else {
       this.activatedRoute.params.pipe(
         switchMap(params => this.api.readSingleAlbum(params["id"])),
@@ -152,9 +153,9 @@ export class AlbumDetail implements OnInit {
         this.year.set(album.year);
         this.tracks.set(album.tracks);
 
-        this.buttonCreateOrUpdateText.set("UPDATE");
+        this.buttonCreateOrUpdateText.set(CONSTANTS.BUTTON.UPDATE);
         this.isButtonDeleteDisabled.set(false);
-      })
+      });
     }
   }
 
@@ -195,13 +196,13 @@ export class AlbumDetail implements OnInit {
       this.api.createAlbum(album)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(album => {
-          this.snackBar.show("Album successfully created.");
-          this.router.navigate(['/album', album.id]);
-        })
+          this.snackBar.show(CONSTANTS.SNACKBAR.ALBUM_CREATED);
+          this.router.navigate([CONSTANTS.ROUTE.ALBUM, album.id]);
+        });
     } else {
       this.api.updateAlbum(this.id, album)
         .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => this.snackBar.show("Album successfully updated."));
+        .subscribe(() => this.snackBar.show(CONSTANTS.SNACKBAR.ALBUM_UPDATED));
     }
   }
 
@@ -209,8 +210,10 @@ export class AlbumDetail implements OnInit {
     this.api.deleteAlbum(this.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.snackBar.show("Album successfully deleted.");
-        this.router.navigate(["/album"]);
+        this.snackBar.show(CONSTANTS.SNACKBAR.ALBUM_DELETED);
+        this.router.navigate([CONSTANTS.ROUTE.ALBUM]);
       });
   }
+
+  protected readonly CONSTANTS = CONSTANTS;
 }

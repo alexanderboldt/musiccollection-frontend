@@ -11,9 +11,9 @@ import { ArtistResponse } from '../../model/artist';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatIcon } from '@angular/material/icon';
 import { MatDivider } from '@angular/material/list';
-import { Option } from '../../util/option'
-import { Parameter} from '../../util/parameter'
+import { Option } from '../../util/option';
 import { Card } from '../card';
+import { CONSTANTS } from '../../util/constants';
 
 @Component({
   selector: 'artist-read-all',
@@ -107,7 +107,7 @@ export class ArtistReadAll implements OnInit {
     this.activatedRoute.queryParams.pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(params => {
-      this.selectedSort = this.sortOptions.find(options => options.value === params[Parameter.SORT])?.value || this.sortOptions[0].value;
+      this.selectedSort = this.sortOptions.find(options => options.value === params[CONSTANTS.PARAM.SORT])?.value || this.sortOptions[0].value;
       this.fetchArtists();
     });
   }

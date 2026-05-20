@@ -9,6 +9,7 @@ import { MatIcon } from '@angular/material/icon';
 import { DetailMode } from '../../util/detail_mode';
 import { SnackBarUtils } from '../../util/snackbar_utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CONSTANTS } from '../../util/constants';
 
 @Component({
   selector: 'artist-detail',
@@ -75,7 +76,7 @@ export class ArtistDetail implements OnInit{
   private readonly snackBar = inject(SnackBarUtils);
   private readonly destroyRef = inject(DestroyRef);
 
-  private mode: DetailMode = DetailMode.CREATE
+  private mode: DetailMode = DetailMode.CREATE;
 
   private id = 0;
 
@@ -90,10 +91,10 @@ export class ArtistDetail implements OnInit{
   isButtonDeleteDisabled = signal(true);
 
   ngOnInit() {
-    this.mode = this.activatedRoute.snapshot.data['mode'];
+    this.mode = this.activatedRoute.snapshot.data["mode"];
 
     if (this.mode === DetailMode.CREATE) {
-      this.buttonCreateOrUpdateText.set("CREATE");
+      this.buttonCreateOrUpdateText.set(CONSTANTS.BUTTON.CREATE);
     } else {
       this.activatedRoute.params.pipe(
         switchMap(params => this.api.readSingleArtist(params["id"])),
@@ -115,10 +116,10 @@ export class ArtistDetail implements OnInit{
 
         this.name.set(artist.name);
 
-        this.buttonCreateOrUpdateText.set("UPDATE");
+        this.buttonCreateOrUpdateText.set(CONSTANTS.BUTTON.UPDATE);
         this.isButtonCreateOrUpdateDisabled.set(false);
         this.isButtonDeleteDisabled.set(false);
-      })
+      });
     }
   }
 
@@ -151,13 +152,13 @@ export class ArtistDetail implements OnInit{
       this.api.createArtist(this.name())
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(artist => {
-          this.snackBar.show("Artist successfully created.");
-          this.router.navigate(['/artist', artist.id]);
-        })
+          this.snackBar.show(CONSTANTS.SNACKBAR.ARTIST_CREATED);
+          this.router.navigate([CONSTANTS.ROUTE.ARTIST, artist.id]);
+        });
     } else {
       this.api.updateArtist(this.id, this.name())
         .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => this.snackBar.show("Artist successfully updated."))
+        .subscribe(() => this.snackBar.show(CONSTANTS.SNACKBAR.ARTIST_UPDATED));
     }
   }
 
@@ -165,8 +166,8 @@ export class ArtistDetail implements OnInit{
     this.api.deleteArtist(this.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.snackBar.show("Artist successfully deleted.");
-        this.router.navigate(["/artist"]);
+        this.snackBar.show(CONSTANTS.SNACKBAR.ARTIST_DELETED);
+        this.router.navigate([CONSTANTS.ROUTE.ARTIST]);
       });
   }
 }

@@ -10,9 +10,9 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatDivider } from '@angular/material/list';
-import { Option } from '../../util/option'
-import { Parameter} from '../../util/parameter'
+import { Option } from '../../util/option';
 import { Card } from '../card';
+import { CONSTANTS } from '../../util/constants';
 
 @Component({
   selector: 'album-read-all',
@@ -128,8 +128,8 @@ export class AlbumReadAll implements OnInit {
       switchMap(() => this.activatedRoute.queryParams),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(params => {
-      this.selectedFilter = this.filterOptions.find(options => options.value === params[Parameter.FILTER])?.value || undefined;
-      this.selectedSort = this.sortOptions.find(options => options.value === params[Parameter.SORT])?.value || this.sortOptions[0].value;
+      this.selectedFilter = this.filterOptions.find(options => options.value === params[CONSTANTS.PARAM.FILTER])?.value || undefined;
+      this.selectedSort = this.sortOptions.find(options => options.value === params[CONSTANTS.PARAM.SORT])?.value || this.sortOptions[0].value;
       this.fetchAlbums();
     });
   }
