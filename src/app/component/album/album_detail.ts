@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Api } from '../../api';
 import { switchMap } from 'rxjs';
@@ -12,6 +12,7 @@ import { MatSelect } from '@angular/material/select';
 import { AlbumRequest } from '../../model/album';
 import { SnackBarUtils } from '../../util/snackbar_utils';
 import { Option } from '../../util/option'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'album-detail',
@@ -96,6 +97,7 @@ export class AlbumDetail implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly snackBar = inject(SnackBarUtils);
+  private readonly destroyRef = inject(DestroyRef);
 
   artistsSelect: Option[] = [];
 
@@ -118,17 +120,18 @@ export class AlbumDetail implements OnInit {
   ngOnInit() {
     this.mode = this.activatedRoute.snapshot.data['mode'];
 
-    this.api.readAllArtist("id").subscribe(artists => {
-      for (const artist of artists) {
-        this.artistsSelect.push({ value: artist.id.toString(), viewValue: artist.name });
-      }
-    });
+    this.api.readAllArtist("id")
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(artists => {
+        artists.forEach(artist => this.artistsSelect.push({ value: artist.id.toString(), viewValue: artist.name }));
+      });
 
     if (this.mode === DetailMode.CREATE) {
       this.buttonCreateOrUpdateText.set("CREATE");
     } else {
       this.activatedRoute.params.pipe(
-        switchMap(params => this.api.readSingleAlbum(params["id"]))
+        switchMap(params => this.api.readSingleAlbum(params["id"])),
+        takeUntilDestroyed(this.destroyRef)
       ).subscribe(album => {
         this.id = album.id;
 
@@ -157,15 +160,19 @@ export class AlbumDetail implements OnInit {
     this
       .api
       .uploadAlbumImage(this.id, event.target.files[0])
-      .pipe(switchMap(() => this.api.downloadAlbumImage(this.id)))
-      .subscribe(url => this.image.set(url));
+      .pipe(
+        switchMap(() => this.api.downloadAlbumImage(this.id)),
+        takeUntilDestroyed(this.destroyRef)
+      ).subscribe(url => this.image.set(url));
   }
 
   deleteAlbumImage() {
-    this.api.deleteAlbumImage(this.id).subscribe(() => {
-      this.image.set("")
-      this.isButtonDeleteImageDisabled.set(true);
-    });
+    this.api.deleteAlbumImage(this.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.image.set("")
+        this.isButtonDeleteImageDisabled.set(true);
+      });
   }
 
   isButtonCreateOrUpdateDisabled() {
@@ -180,21 +187,25 @@ export class AlbumDetail implements OnInit {
     album.tracks = this.tracks();
 
     if (this.mode === DetailMode.CREATE) {
-      this.api.createAlbum(album).subscribe(album => {
-        this.snackBar.show("Album successfully created.");
-        this.router.navigate(['/album', album.id]);
-      })
+      this.api.createAlbum(album)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(album => {
+          this.snackBar.show("Album successfully created.");
+          this.router.navigate(['/album', album.id]);
+        })
     } else {
-      this.api.updateAlbum(this.id, album).subscribe(() => {
-        this.snackBar.show("Album successfully updated.");
-      })
+      this.api.updateAlbum(this.id, album)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(() => this.snackBar.show("Album successfully updated."));
     }
   }
 
   deleteAlbum() {
-    this.api.deleteAlbum(this.id).subscribe(() => {
-      this.snackBar.show("Album successfully deleted.");
-      this.router.navigate(["/album"]);
-    });
+    this.api.deleteAlbum(this.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.snackBar.show("Album successfully deleted.");
+        this.router.navigate(["/album"]);
+      });
   }
 }
