@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Api } from '../../api';
 import { switchMap } from 'rxjs';
@@ -8,6 +8,7 @@ import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
 import { DetailMode } from '../../util/detail_mode';
 import { SnackBarUtils } from '../../util/snackbar_utils';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'artist-detail',
@@ -72,6 +73,7 @@ export class ArtistDetail implements OnInit{
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly snackBar = inject(SnackBarUtils);
+  private readonly destroyRef = inject(DestroyRef);
 
   private mode: DetailMode = DetailMode.CREATE
 
@@ -94,15 +96,18 @@ export class ArtistDetail implements OnInit{
       this.buttonCreateOrUpdateText.set("CREATE");
     } else {
       this.activatedRoute.params.pipe(
-        switchMap(params => this.api.readSingleArtist(params["id"]))
+        switchMap(params => this.api.readSingleArtist(params["id"])),
+        takeUntilDestroyed(this.destroyRef)
       ).subscribe(artist => {
         this.id = artist.id;
 
         if (artist.filename != null) {
-          this.api.downloadArtistImage(this.id).subscribe(url => {
-            this.image.set(url);
-            this.isButtonDeleteImageDisabled.set(false);
-          });
+          this.api.downloadArtistImage(this.id)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(url => {
+              this.image.set(url);
+              this.isButtonDeleteImageDisabled.set(false);
+            });
         } else {
           this.isButtonDeleteImageDisabled.set(true);
         }
@@ -118,18 +123,20 @@ export class ArtistDetail implements OnInit{
   }
 
   uploadArtistImage(event: any) {
-    this
-      .api
-      .uploadArtistImage(this.id, event.target.files[0])
-      .pipe(switchMap(() => this.api.downloadArtistImage(this.id)))
-      .subscribe(url => this.image.set(url));
+    this.api.uploadArtistImage(this.id, event.target.files[0])
+      .pipe(
+        switchMap(() => this.api.downloadArtistImage(this.id)),
+        takeUntilDestroyed(this.destroyRef)
+      ).subscribe(url => this.image.set(url));
   }
 
   deleteArtistImage() {
-    this.api.deleteArtistImage(this.id).subscribe(() => {
-      this.image.set("")
-      this.isButtonDeleteImageDisabled.set(true);
-    });
+    this.api.deleteArtistImage(this.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.image.set("")
+        this.isButtonDeleteImageDisabled.set(true);
+      });
   }
 
   onChangeArtistName() {
@@ -138,21 +145,25 @@ export class ArtistDetail implements OnInit{
 
   createOrUpdateArtist() {
     if (this.mode === DetailMode.CREATE) {
-      this.api.createArtist(this.name()).subscribe(artist => {
-        this.snackBar.show("Artist successfully created.");
-        this.router.navigate(['/artist', artist.id]);
-      })
+      this.api.createArtist(this.name())
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(artist => {
+          this.snackBar.show("Artist successfully created.");
+          this.router.navigate(['/artist', artist.id]);
+        })
     } else {
-      this.api
-        .updateArtist(this.id, this.name())
+      this.api.updateArtist(this.id, this.name())
+        .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => this.snackBar.show("Artist successfully updated."))
     }
   }
 
   deleteArtist() {
-    this.api.deleteArtist(this.id).subscribe(() => {
-      this.snackBar.show("Artist successfully deleted.");
-      this.router.navigate(["/artist"]);
-    });
+    this.api.deleteArtist(this.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.snackBar.show("Artist successfully deleted.");
+        this.router.navigate(["/artist"]);
+      });
   }
 }
