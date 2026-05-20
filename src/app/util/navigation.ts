@@ -6,5 +6,13 @@ export const NAVIGATION = {
       NEW: "/artist/new",
       DETAIL: "/artist/:id"
     }
-  }
+  },
+  ALBUM: {
+    TITLE: "Album",
+    ROUTES: {
+      BASE: "/album",
+      NEW: "/album/new",
+      DETAIL: "/album/:id"
+    }
+  },
 };

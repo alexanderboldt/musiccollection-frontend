@@ -13,6 +13,7 @@ import { MatDivider } from '@angular/material/list';
 import { Option } from '../../util/option';
 import { Card } from '../card';
 import { CONSTANTS } from '../../util/constants';
+import { NAVIGATION } from '../../util/navigation';
 
 @Component({
   selector: 'album-read-all',
@@ -50,7 +51,7 @@ import { CONSTANTS } from '../../util/constants';
         </mat-select>
       </mat-form-field>
 
-      <button routerLink="/album/new" matButton>
+      <button routerLink="{{ NAVIGATION.ALBUM.ROUTES.NEW }}" matButton>
         <mat-icon>add_circle_outline</mat-icon>
         {{ CONSTANTS.BUTTON.CREATE_ALBUM }}
       </button>
@@ -63,7 +64,7 @@ import { CONSTANTS } from '../../util/constants';
     <div id="albumContent">
       @for (album of albums(); track album.id) {
         <card
-          detailRoute="/album/{{album.id}}"
+          detailRoute="{{ NAVIGATION.ALBUM.ROUTES.DETAIL.replace(':id', album.id.toString()) }}"
           [image]="album.filename ? (downloadAlbumImage(album.id) | async) : null"
           [title]="album.name"
           [subtitle]="album.artistName"
@@ -118,6 +119,7 @@ export class AlbumReadAll implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly CONSTANTS = CONSTANTS;
+  protected readonly NAVIGATION = NAVIGATION;
 
   ngOnInit() {
     // Initialize filter options and subscribe to query params

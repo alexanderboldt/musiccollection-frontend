@@ -5,7 +5,6 @@ import { User } from './user';
 import { MatActionList, MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCard } from '@angular/material/card';
-import { CONSTANTS } from '../util/constants';
 import { NAVIGATION } from '../util/navigation';
 
 @Component({
@@ -30,7 +29,7 @@ import { NAVIGATION } from '../util/navigation';
 
         <mat-action-list>
           <a routerLink="{{ NAVIGATION.ARTIST.ROUTES.BASE }}" routerLinkActive="active-route" mat-list-item><span routerLinkActive="active-text">{{ NAVIGATION.ARTIST.TITLE }}</span></a>
-          <a routerLink="/album" routerLinkActive="active-route" mat-list-item><span routerLinkActive="active-text">Album</span></a>
+          <a routerLink="{{ NAVIGATION.ALBUM.ROUTES.BASE }}" routerLinkActive="active-route" mat-list-item><span routerLinkActive="active-text">{{ NAVIGATION.ALBUM.TITLE }}</span></a>
         </mat-action-list>
       </mat-card>
     </div>
@@ -66,5 +65,4 @@ import { NAVIGATION } from '../util/navigation';
 })
 export class Sidebar {
   protected readonly NAVIGATION = NAVIGATION;
-  protected readonly CONSTANTS = CONSTANTS;
 }

@@ -24,12 +24,6 @@ export const CONSTANTS = {
     ALBUM_DELETED: 'Album successfully deleted.'
   },
 
-  // Routes
-  ROUTE: {
-    ALBUM: '/album',
-    ALBUM_NEW: '/album/new'
-  },
-
   // Query parameters
   PARAM: {
     SORT: 'sort',

@@ -14,6 +14,7 @@ import { SnackBarUtils } from '../../util/snackbar_utils';
 import { Option } from '../../util/option'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CONSTANTS } from '../../util/constants';
+import { NAVIGATION } from '../../util/navigation';
 
 @Component({
   selector: 'album-detail',
@@ -30,7 +31,7 @@ import { CONSTANTS } from '../../util/constants';
     MatSelect
   ],
   template: `
-    <button routerLink="/album" matButton>
+    <button routerLink="{{ NAVIGATION.ALBUM.ROUTES.BASE }}" matButton>
       <mat-icon>arrow_back</mat-icon>
       {{ CONSTANTS.BUTTON.BACK }}
     </button>
@@ -118,6 +119,7 @@ export class AlbumDetail implements OnInit {
   isButtonDeleteDisabled = signal(true);
 
   protected readonly CONSTANTS = CONSTANTS;
+  protected readonly NAVIGATION = NAVIGATION;
 
   ngOnInit() {
     this.mode = this.activatedRoute.snapshot.data["mode"];
@@ -198,7 +200,7 @@ export class AlbumDetail implements OnInit {
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(album => {
           this.snackBar.show(CONSTANTS.SNACKBAR.ALBUM_CREATED);
-          this.router.navigate([CONSTANTS.ROUTE.ALBUM, album.id]);
+          this.router.navigate([NAVIGATION.ALBUM.ROUTES.BASE, album.id]);
         });
     } else {
       this.api.updateAlbum(this.id, album)
@@ -212,7 +214,7 @@ export class AlbumDetail implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.snackBar.show(CONSTANTS.SNACKBAR.ALBUM_DELETED);
-        this.router.navigate([CONSTANTS.ROUTE.ALBUM]);
+        this.router.navigate([NAVIGATION.ALBUM.ROUTES.BASE]);
       });
   }
 }

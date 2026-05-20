@@ -28,16 +28,16 @@ export const routes: Routes = [
     data: { mode: DetailMode.EDIT }
   },
   {
-    path: 'album',
+    path: NAVIGATION.ALBUM.ROUTES.BASE.substring(1),
     component: Album
   },
   {
-    path: 'album/new',
+    path: NAVIGATION.ALBUM.ROUTES.NEW.substring(1),
     component: AlbumDetail,
     data: { mode: DetailMode.CREATE }
   },
   {
-    path: 'album/:id',
+    path: NAVIGATION.ALBUM.ROUTES.DETAIL.substring(1),
     component: AlbumDetail,
     data: { mode: DetailMode.EDIT }
   }
