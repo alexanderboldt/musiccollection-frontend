@@ -68,6 +68,7 @@ import { NAVIGATION } from '../../util/navigation';
           [image]="album.filename ? (downloadAlbumImage(album.id) | async) : null"
           [title]="album.name"
           [subtitle]="album.artistName"
+          [isButtonDeleteImageDisabled]="album.filename == null"
           (uploadImage)="uploadAlbumImage(album.id, $event)"
           (deleteImage)="deleteAlbumImage(album.id)"
           (delete)="deleteAlbum(album.id)" />

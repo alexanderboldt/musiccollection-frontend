@@ -35,7 +35,7 @@ import { CONSTANTS } from '../util/constants';
         <button type="button" (click)="fileInput.click()" matButton>{{ CONSTANTS.BUTTON.SET_IMAGE }}</button>
         <input type="file" id="file" hidden (change)="onUploadImage($event)" #fileInput>
 
-        <button (click)="onDeleteImage()" matButton>{{ CONSTANTS.BUTTON.DELETE_IMAGE }}</button>
+        <button (click)="onDeleteImage()" [disabled]="isButtonDeleteImageDisabled()" matButton>{{ CONSTANTS.BUTTON.DELETE_IMAGE }}</button>
         <button (click)="onDelete()" matButton>{{ CONSTANTS.BUTTON.DELETE }}</button>
       </mat-card-actions>
     </mat-card>
@@ -60,6 +60,7 @@ export class Card {
   image = input.required<string | null>();
   title = input.required<string>();
   subtitle = input<string>();
+  isButtonDeleteImageDisabled = input.required<boolean>();
 
   uploadImage = output<any>();
   deleteImage = output<void>();

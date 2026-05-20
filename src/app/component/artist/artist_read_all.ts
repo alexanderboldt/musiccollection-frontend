@@ -58,6 +58,7 @@ import { NAVIGATION } from '../../util/navigation';
           detailRoute="{{ NAVIGATION.ARTIST.ROUTES.DETAIL.replace(':id', artist.id.toString()) }}"
           [image]="artist.filename ? (downloadArtistImage(artist.id) | async) : null"
           [title]="artist.name"
+          [isButtonDeleteImageDisabled]="artist.filename == null"
           (uploadImage)="uploadArtistImage(artist.id, $event)"
           (deleteImage)="deleteArtistImage(artist.id)"
           (delete)="deleteArtist(artist.id)" />
