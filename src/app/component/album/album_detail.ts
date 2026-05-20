@@ -136,10 +136,12 @@ export class AlbumDetail implements OnInit {
         this.id = album.id;
 
         if (album.filename != null) {
-          this.api.downloadAlbumImage(this.id).subscribe(url => {
-            this.image.set(url);
-            this.isButtonDeleteImageDisabled.set(false);
-          });
+          this.api.downloadAlbumImage(this.id)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(url => {
+              this.image.set(url);
+              this.isButtonDeleteImageDisabled.set(false);
+            });
         } else {
           this.isButtonDeleteImageDisabled.set(true);
         }
@@ -163,7 +165,10 @@ export class AlbumDetail implements OnInit {
       .pipe(
         switchMap(() => this.api.downloadAlbumImage(this.id)),
         takeUntilDestroyed(this.destroyRef)
-      ).subscribe(url => this.image.set(url));
+      ).subscribe(url => {
+        this.image.set(url);
+        this.isButtonDeleteImageDisabled.set(false);
+      });
   }
 
   deleteAlbumImage() {

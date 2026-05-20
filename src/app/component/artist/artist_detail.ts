@@ -127,7 +127,10 @@ export class ArtistDetail implements OnInit{
       .pipe(
         switchMap(() => this.api.downloadArtistImage(this.id)),
         takeUntilDestroyed(this.destroyRef)
-      ).subscribe(url => this.image.set(url));
+      ).subscribe(url => {
+        this.image.set(url);
+        this.isButtonDeleteImageDisabled.set(false);
+      });
   }
 
   deleteArtistImage() {
