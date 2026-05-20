@@ -26,8 +26,6 @@ export const CONSTANTS = {
 
   // Routes
   ROUTE: {
-    ARTIST: '/artist',
-    ARTIST_NEW: '/artist/new',
     ALBUM: '/album',
     ALBUM_NEW: '/album/new'
   },

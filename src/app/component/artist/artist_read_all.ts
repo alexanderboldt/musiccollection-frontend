@@ -14,6 +14,7 @@ import { MatDivider } from '@angular/material/list';
 import { Option } from '../../util/option';
 import { Card } from '../card';
 import { CONSTANTS } from '../../util/constants';
+import { NAVIGATION } from '../../util/navigation';
 
 @Component({
   selector: 'artist-read-all',
@@ -41,7 +42,7 @@ import { CONSTANTS } from '../../util/constants';
         </mat-select>
       </mat-form-field>
 
-      <button routerLink="/artist/new" matButton>
+      <button routerLink="{{ NAVIGATION.ARTIST.ROUTES.NEW }}" matButton>
         <mat-icon>add_circle_outline</mat-icon>
         {{ CONSTANTS.BUTTON.CREATE_ARTIST }}
       </button>
@@ -54,7 +55,7 @@ import { CONSTANTS } from '../../util/constants';
     <div id="artistContent">
       @for (artist of artists(); track artist.id) {
         <card
-          detailRoute="/artist/{{artist.id}}"
+          detailRoute="{{ NAVIGATION.ARTIST.ROUTES.DETAIL.replace(':id', artist.id.toString()) }}"
           [image]="artist.filename ? (downloadArtistImage(artist.id) | async) : null"
           [title]="artist.name"
           (uploadImage)="uploadArtistImage(artist.id, $event)"
@@ -103,6 +104,7 @@ export class ArtistReadAll implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly CONSTANTS = CONSTANTS;
+  protected readonly NAVIGATION = NAVIGATION;
 
   ngOnInit() {
     // Subscribe to query params and fetch artists on change

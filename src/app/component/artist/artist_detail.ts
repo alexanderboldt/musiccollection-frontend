@@ -10,6 +10,7 @@ import { DetailMode } from '../../util/detail_mode';
 import { SnackBarUtils } from '../../util/snackbar_utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CONSTANTS } from '../../util/constants';
+import { NAVIGATION } from '../../util/navigation';
 
 @Component({
   selector: 'artist-detail',
@@ -23,7 +24,7 @@ import { CONSTANTS } from '../../util/constants';
     RouterLink
   ],
   template: `
-    <button routerLink="/artist" matButton>
+    <button routerLink="{{ NAVIGATION.ARTIST.ROUTES.BASE }}" matButton>
       <mat-icon>arrow_back</mat-icon>
       {{  CONSTANTS.BUTTON.BACK }}
     </button>
@@ -90,6 +91,7 @@ export class ArtistDetail implements OnInit{
   isButtonDeleteDisabled = signal(true);
 
   protected readonly CONSTANTS = CONSTANTS;
+  protected readonly NAVIGATION = NAVIGATION;
 
   ngOnInit() {
     this.mode = this.activatedRoute.snapshot.data["mode"];
@@ -154,7 +156,7 @@ export class ArtistDetail implements OnInit{
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(artist => {
           this.snackBar.show(CONSTANTS.SNACKBAR.ARTIST_CREATED);
-          this.router.navigate([CONSTANTS.ROUTE.ARTIST, artist.id]);
+          this.router.navigate([NAVIGATION.ARTIST.ROUTES.BASE, artist.id]);
         });
     } else {
       this.api.updateArtist(this.id, this.name())
@@ -168,7 +170,7 @@ export class ArtistDetail implements OnInit{
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.snackBar.show(CONSTANTS.SNACKBAR.ARTIST_DELETED);
-        this.router.navigate([CONSTANTS.ROUTE.ARTIST]);
+        this.router.navigate([NAVIGATION.ARTIST.ROUTES.BASE]);
       });
   }
 }
