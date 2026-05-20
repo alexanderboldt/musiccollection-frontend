@@ -3,6 +3,7 @@ import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle, M
 import { MatButton} from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { CONSTANTS } from '../util/constants';
 
 @Component({
   selector: 'card',
@@ -31,11 +32,11 @@ import { RouterLink } from '@angular/router';
         <mat-card-subtitle>{{ subtitle() }}</mat-card-subtitle>
       </mat-card-header>
       <mat-card-actions>
-        <button type="button" (click)="fileInput.click()" matButton>SET IMAGE</button>
+        <button type="button" (click)="fileInput.click()" matButton>{{ CONSTANTS.BUTTON.SET_IMAGE }}</button>
         <input type="file" id="file" hidden (change)="onUploadImage($event)" #fileInput>
 
-        <button (click)="onDeleteImage()" matButton>DELETE IMAGE</button>
-        <button (click)="onDelete()" matButton>DELETE</button>
+        <button (click)="onDeleteImage()" matButton>{{ CONSTANTS.BUTTON.DELETE_IMAGE }}</button>
+        <button (click)="onDelete()" matButton>{{ CONSTANTS.BUTTON.DELETE }}</button>
       </mat-card-actions>
     </mat-card>
 `,
@@ -63,6 +64,8 @@ export class Card {
   uploadImage = output<any>();
   deleteImage = output<void>();
   delete = output<void>();
+
+  protected readonly CONSTANTS = CONSTANTS;
 
   onUploadImage(event: any) {
     this.uploadImage.emit(event);

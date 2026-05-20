@@ -32,7 +32,7 @@ import { CONSTANTS } from '../../util/constants';
   template: `
     <button routerLink="/album" matButton>
       <mat-icon>arrow_back</mat-icon>
-      Back
+      {{ CONSTANTS.BUTTON.BACK }}
     </button>
 
     <form>
@@ -43,11 +43,10 @@ import { CONSTANTS } from '../../util/constants';
       }
 
       <div style="display: flex; flex-direction: row;">
-        <button type="button" (click)="fileInput.click()" [disabled]="isButtonSetImageDisabled()" matButton>SET IMAGE
-        </button>
+        <button type="button" (click)="fileInput.click()" [disabled]="isButtonSetImageDisabled()" matButton>{{ CONSTANTS.BUTTON.SET_IMAGE }}</button>
         <input type="file" id="file" hidden (change)="uploadAlbumImage($event)" #fileInput>
 
-        <button (click)="deleteAlbumImage()" [disabled]="isButtonDeleteImageDisabled()" matButton>DELETE IMAGE</button>
+        <button (click)="deleteAlbumImage()" [disabled]="isButtonDeleteImageDisabled()" matButton>{{ CONSTANTS.BUTTON.DELETE_IMAGE }}</button>
       </div>
 
       <mat-form-field>
@@ -73,7 +72,7 @@ import { CONSTANTS } from '../../util/constants';
 
       <button type="button" (click)="createOrUpdateAlbum()" [disabled]="isButtonCreateOrUpdateDisabled()"
               matButton="filled" [textContent]="buttonCreateOrUpdateText()"></button>
-      <button type="button" (click)="deleteAlbum()" [disabled]="isButtonDeleteDisabled()" matButton="outlined">DELETE
+      <button type="button" (click)="deleteAlbum()" [disabled]="isButtonDeleteDisabled()" matButton="outlined">{{ CONSTANTS.BUTTON.DELETE }}
       </button>
     </form>
   `,
@@ -117,6 +116,8 @@ export class AlbumDetail implements OnInit {
 
   buttonCreateOrUpdateText = signal("");
   isButtonDeleteDisabled = signal(true);
+
+  protected readonly CONSTANTS = CONSTANTS;
 
   ngOnInit() {
     this.mode = this.activatedRoute.snapshot.data["mode"];
@@ -214,6 +215,4 @@ export class AlbumDetail implements OnInit {
         this.router.navigate([CONSTANTS.ROUTE.ALBUM]);
       });
   }
-
-  protected readonly CONSTANTS = CONSTANTS;
 }

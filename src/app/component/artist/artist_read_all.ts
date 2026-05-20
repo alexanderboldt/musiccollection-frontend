@@ -43,7 +43,7 @@ import { CONSTANTS } from '../../util/constants';
 
       <button routerLink="/artist/new" matButton>
         <mat-icon>add_circle_outline</mat-icon>
-        CREATE ARTIST
+        {{ CONSTANTS.BUTTON.CREATE_ARTIST }}
       </button>
     </div>
 
@@ -101,6 +101,8 @@ export class ArtistReadAll implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+
+  protected readonly CONSTANTS = CONSTANTS;
 
   ngOnInit() {
     // Subscribe to query params and fetch artists on change

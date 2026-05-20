@@ -25,7 +25,7 @@ import { CONSTANTS } from '../../util/constants';
   template: `
     <button routerLink="/artist" matButton>
       <mat-icon>arrow_back</mat-icon>
-      Back
+      {{  CONSTANTS.BUTTON.BACK }}
     </button>
 
     <form>
@@ -36,11 +36,10 @@ import { CONSTANTS } from '../../util/constants';
       }
 
       <div style="display: flex; flex-direction: row;">
-        <button type="button" (click)="fileInput.click()" [disabled]="isButtonSetImageDisabled()" matButton>SET IMAGE
-        </button>
+        <button type="button" (click)="fileInput.click()" [disabled]="isButtonSetImageDisabled()" matButton>{{ CONSTANTS.BUTTON.SET_IMAGE }}</button>
         <input type="file" id="file" hidden (change)="uploadArtistImage($event)" #fileInput>
 
-        <button (click)="deleteArtistImage()" [disabled]="isButtonDeleteImageDisabled()" matButton>DELETE IMAGE</button>
+        <button (click)="deleteArtistImage()" [disabled]="isButtonDeleteImageDisabled()" matButton>{{ CONSTANTS.BUTTON.DELETE_IMAGE }}</button>
       </div>
 
       <mat-form-field>
@@ -49,7 +48,7 @@ import { CONSTANTS } from '../../util/constants';
       </mat-form-field>
       <button type="button" (click)="createOrUpdateArtist()" [disabled]="isButtonCreateOrUpdateDisabled()"
               matButton="filled" [textContent]="buttonCreateOrUpdateText()"></button>
-      <button type="button" (click)="deleteArtist()" [disabled]="isButtonDeleteDisabled()" matButton="outlined">DELETE
+      <button type="button" (click)="deleteArtist()" [disabled]="isButtonDeleteDisabled()" matButton="outlined">{{ CONSTANTS.BUTTON.DELETE }}
       </button>
     </form>
   `,
@@ -89,6 +88,8 @@ export class ArtistDetail implements OnInit{
   buttonCreateOrUpdateText = signal("");
   isButtonCreateOrUpdateDisabled = signal(true);
   isButtonDeleteDisabled = signal(true);
+
+  protected readonly CONSTANTS = CONSTANTS;
 
   ngOnInit() {
     this.mode = this.activatedRoute.snapshot.data["mode"];

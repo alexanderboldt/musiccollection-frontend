@@ -52,7 +52,7 @@ import { CONSTANTS } from '../../util/constants';
 
       <button routerLink="/album/new" matButton>
         <mat-icon>add_circle_outline</mat-icon>
-        CREATE ALBUM
+        {{ CONSTANTS.BUTTON.CREATE_ALBUM }}
       </button>
     </div>
 
@@ -116,6 +116,8 @@ export class AlbumReadAll implements OnInit {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
+
+  protected readonly CONSTANTS = CONSTANTS;
 
   ngOnInit() {
     // Initialize filter options and subscribe to query params
