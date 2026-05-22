@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Sidebar } from './component/sidebar';
 import { MatCard } from '@angular/material/card';
+import { ThemeService } from './util/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -33,4 +34,10 @@ import { MatCard } from '@angular/material/card';
     }
   `
 })
-export class App {}
+export class App implements OnInit {
+  private readonly themeService = inject(ThemeService);
+
+  ngOnInit(): void {
+    this.themeService.initTheme();
+  }
+}

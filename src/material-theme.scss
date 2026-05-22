@@ -19,15 +19,23 @@ html {
   );
 }
 
-body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
+/* Theme classes allow switching the color-scheme from code by toggling
+   a class on the <body> element. We keep the Material CSS variables from
+   the global theme above, and only flip the color-scheme here. If you
+   want to supply fully different palettes for dark vs light you can
+   generate separate theme blocks and scope them to .light-theme / .dark-theme. */
 
+body.light-theme {
+  color-scheme: light;
+}
+
+body.dark-theme {
+  color-scheme: dark;
+}
+
+body {
   // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
+  // Angular Material's system-level CSS variables.
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
