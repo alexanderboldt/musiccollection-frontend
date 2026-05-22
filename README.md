@@ -4,18 +4,16 @@ This is a frontend application for managing the music-library like artists and a
 
 ## :framed_picture: Screenshots
 ### Artist
-### Overview
-![Artist Overview](screenshots/artist_overview.png)
-
-### Detail
-![Artist Detail](screenshots/artist_detail.png)
+![Artist Overview](screenshots/artist_overview_light.png)
+![Artist Detail](screenshots/artist_detail_light.png)
 
 ### Album
-### Overview
-![Album Overview](screenshots/album_overview.png)
+![Album Overview](screenshots/album_overview_light.png)
+![Album Detail](screenshots/album_detail_light.png)
 
-### Detail
-![Album Detail](screenshots/album_detail.png)
+### Dark Mode
+![Artist Overview](screenshots/artist_overview_dark.png)
+![Artist Detail](screenshots/artist_detail_dark.png)
 
 ## :computer: Tech-Stack
 
