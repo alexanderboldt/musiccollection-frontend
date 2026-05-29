@@ -4,8 +4,8 @@ import { ArtistOverview } from './component/artist/artist.overview';
 import { ArtistDetail } from './component/artist/artist.detail';
 import { AlbumOverview } from './component/album/album.overview';
 import { AlbumDetail } from './component/album/album.detail';
-import { DetailMode } from './util/detail.mode';
-import { NAVIGATION } from './util/navigation';
+import { DetailMode } from './navigation/detail.mode';
+import { NAVIGATION } from './navigation/navigation';
 
 export const routes: Routes = [
   {

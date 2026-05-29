@@ -3,7 +3,7 @@ import { MatCard, MatCardActions, MatCardContent, MatCardHeader, MatCardTitle, M
 import { MatButton} from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { CONSTANTS } from '../util/constants';
+import { CONSTANTS } from './constants';
 
 @Component({
   selector: 'card',

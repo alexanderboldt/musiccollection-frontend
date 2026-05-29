@@ -1,20 +1,20 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Api } from '../../api';
+import { Api } from '../../api/api';
 import { switchMap } from 'rxjs';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
-import { DetailMode } from '../../util/detail.mode';
+import { DetailMode } from '../../navigation/detail.mode';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
-import { AlbumRequest } from '../../model/album';
-import { SnackBarUtils } from '../../util/snackbar.utils';
-import { Option } from '../../util/option'
+import { AlbumRequest } from '../../api/model/album';
+import { Snackbar } from '../snackbar';
+import { Option } from '../option'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CONSTANTS } from '../../util/constants';
-import { NAVIGATION } from '../../util/navigation';
+import { CONSTANTS } from '../constants';
+import { NAVIGATION } from '../../navigation/navigation';
 
 @Component({
   selector: 'album-detail',
@@ -97,7 +97,7 @@ export class AlbumDetail implements OnInit {
   private readonly api = inject(Api);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly snackBar = inject(SnackBarUtils);
+  private readonly snackBar = inject(Snackbar);
   private readonly destroyRef = inject(DestroyRef);
 
   protected artistsSelect: Option[] = [];

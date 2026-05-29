@@ -5,7 +5,7 @@ import { User } from './user';
 import { MatActionList, MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCard } from '@angular/material/card';
-import { NAVIGATION } from '../util/navigation';
+import { NAVIGATION } from '../navigation/navigation';
 import { MatButton } from '@angular/material/button';
 import { ThemeService } from '../util/theme.service';
 

@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { Api } from '../api';
+import { Api } from '../api/api';
 
 @Component({
   selector: 'user',

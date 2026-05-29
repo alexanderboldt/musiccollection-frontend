@@ -4,16 +4,16 @@ import { Observable, forkJoin, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton} from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
-import { Api } from '../../api';
+import { Api } from '../../api/api';
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatOption, MatSelect } from '@angular/material/select';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatDivider } from '@angular/material/list';
-import { Option } from '../../util/option';
+import { Option } from '../option';
 import { Card } from '../card';
-import { CONSTANTS } from '../../util/constants';
-import { NAVIGATION } from '../../util/navigation';
+import { CONSTANTS } from '../constants';
+import { NAVIGATION } from '../../navigation/navigation';
 
 @Component({
   selector: 'album-overview',
