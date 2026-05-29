@@ -16,7 +16,7 @@ import { CONSTANTS } from '../../util/constants';
 import { NAVIGATION } from '../../util/navigation';
 
 @Component({
-  selector: 'album-read-all',
+  selector: 'album-overview',
   imports: [
     MatButton,
     FormsModule,
@@ -31,6 +31,7 @@ import { NAVIGATION } from '../../util/navigation';
     Card
   ],
   template: `
+    <h2>Albums</h2>
     <div id="sort">
       <mat-form-field>
         <mat-label>Filter</mat-label>
@@ -76,6 +77,10 @@ import { NAVIGATION } from '../../util/navigation';
     </div>
   `,
   styles: `
+    h2 {
+      color: var(--mat-sys-primary);
+    }
+
     #sort {
       display: flex;
       flex-direction: row;
@@ -96,7 +101,7 @@ import { NAVIGATION } from '../../util/navigation';
     }
   `
 })
-export class AlbumReadAll implements OnInit {
+export class AlbumOverview implements OnInit {
   protected filterOptions: Option[] = [];
   protected selectedFilter?: string = undefined;
 

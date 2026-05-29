@@ -6,11 +6,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
-import { DetailMode } from '../../util/detail_mode';
+import { DetailMode } from '../../util/detail.mode';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 import { AlbumRequest } from '../../model/album';
-import { SnackBarUtils } from '../../util/snackbar_utils';
+import { SnackBarUtils } from '../../util/snackbar.utils';
 import { Option } from '../../util/option'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CONSTANTS } from '../../util/constants';

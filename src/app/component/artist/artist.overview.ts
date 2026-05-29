@@ -17,7 +17,7 @@ import { CONSTANTS } from '../../util/constants';
 import { NAVIGATION } from '../../util/navigation';
 
 @Component({
-  selector: 'artist-read-all',
+  selector: 'artist-overview',
   imports: [
     MatButton,
     FormsModule,
@@ -32,6 +32,7 @@ import { NAVIGATION } from '../../util/navigation';
     Card
   ],
   template: `
+    <h2>Artists</h2>
     <div id="sort">
       <mat-form-field>
         <mat-label>Sort</mat-label>
@@ -66,6 +67,10 @@ import { NAVIGATION } from '../../util/navigation';
     </div>
   `,
   styles: `
+    h2 {
+      color: var(--mat-sys-primary);
+    }
+
     #sort {
       display: flex;
       flex-direction: row;
@@ -86,7 +91,7 @@ import { NAVIGATION } from '../../util/navigation';
     }
   `
 })
-export class ArtistReadAll implements OnInit {
+export class ArtistOverview implements OnInit {
   protected sortOptions: Option[] = [
     { value: 'id', viewValue: 'Created First' },
     { value: '-id', viewValue: 'Created Last' },
