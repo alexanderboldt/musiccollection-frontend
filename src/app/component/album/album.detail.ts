@@ -75,7 +75,7 @@ import { DeleteDialogComponent, DeleteDialogData } from '../delete.dialog';
 
       <button type="button" (click)="createOrUpdateAlbum()" [disabled]="isButtonCreateOrUpdateDisabled()"
               matButton="filled" [textContent]="buttonCreateOrUpdateText()"></button>
-      <button type="button" (click)="deleteAlbum()" [disabled]="isButtonDeleteDisabled()" matButton="outlined">{{ CONSTANTS.BUTTON.DELETE }}
+      <button type="button" (click)="openDialogDeleteAlbum()" [disabled]="isButtonDeleteDisabled()" matButton="outlined">{{ CONSTANTS.BUTTON.DELETE }}
       </button>
     </form>
   `,
@@ -218,6 +218,14 @@ export class AlbumDetail implements OnInit {
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => this.snackBar.show(CONSTANTS.SNACKBAR.ALBUM_UPDATED));
     }
+  }
+
+  openDialogDeleteAlbum() {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: new DeleteDialogData("Album", this.name()) });
+
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(result => result && this.deleteAlbum());
   }
 
   deleteAlbum() {
