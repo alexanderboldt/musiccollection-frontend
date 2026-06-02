@@ -14,6 +14,8 @@ import { Option } from '../option';
 import { Card } from '../card';
 import { CONSTANTS } from '../constants';
 import { NAVIGATION } from '../../navigation/navigation';
+import { DeleteDialogComponent, DeleteDialogData } from '../delete.dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'album-overview',
@@ -71,8 +73,8 @@ import { NAVIGATION } from '../../navigation/navigation';
           [subtitle]="album.artistName"
           [isButtonDeleteImageDisabled]="album.filename == null"
           (uploadImage)="uploadAlbumImage(album.id, $event)"
-          (deleteImage)="deleteAlbumImage(album.id)"
-          (delete)="deleteAlbum(album.id)" />
+          (deleteImage)="openDialogDeleteAlbumImage(album.id, album.name)"
+          (delete)="openDialogDeleteAlbum(album.id, album.name)" />
       }
     </div>
   `,
@@ -123,6 +125,7 @@ export class AlbumOverview implements OnInit {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly CONSTANTS = CONSTANTS;
   protected readonly NAVIGATION = NAVIGATION;
@@ -172,6 +175,14 @@ export class AlbumOverview implements OnInit {
     this.fetchAlbums();
   }
 
+  openDialogDeleteAlbum(id: number, name: string) {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: new DeleteDialogData("Album", name) });
+
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(result => result && this.deleteAlbum(id));
+  }
+
   deleteAlbum(id: number) {
     this.api.deleteAlbum(id).subscribe(() => this.readAllAlbums());
   }
@@ -185,6 +196,14 @@ export class AlbumOverview implements OnInit {
       this.imageUrlMap.set(id, this.api.downloadAlbumImage(id));
     }
     return this.imageUrlMap.get(id)!;
+  }
+
+  openDialogDeleteAlbumImage(id: number, name: string) {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: new DeleteDialogData("Image", ` the image from ${name}`) });
+
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(result => result && this.deleteAlbumImage(id));
   }
 
   deleteAlbumImage(id: number) {
