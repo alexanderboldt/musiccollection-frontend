@@ -15,6 +15,8 @@ import { Option } from '../option';
 import { Card } from '../card';
 import { CONSTANTS } from '../constants';
 import { NAVIGATION } from '../../navigation/navigation';
+import { DeleteDialogComponent, DeleteDialogData } from '../delete.dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'artist-overview',
@@ -61,8 +63,8 @@ import { NAVIGATION } from '../../navigation/navigation';
           [title]="artist.name"
           [isButtonDeleteImageDisabled]="artist.filename == null"
           (uploadImage)="uploadArtistImage(artist.id, $event)"
-          (deleteImage)="deleteArtistImage(artist.id)"
-          (delete)="deleteArtist(artist.id)" />
+          (deleteImage)="openDialogDeleteArtistImage(artist.id, artist.name)"
+          (delete)="openDialogDeleteArtist(artist.id, artist.name)" />
       }
     </div>
   `,
@@ -108,6 +110,7 @@ export class ArtistOverview implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly CONSTANTS = CONSTANTS;
   protected readonly NAVIGATION = NAVIGATION;
@@ -139,6 +142,14 @@ export class ArtistOverview implements OnInit {
     this.fetchArtists();
   }
 
+  openDialogDeleteArtist(id: number, name: string) {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: new DeleteDialogData("Artist", name) });
+
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(result => result && this.deleteArtist(id));
+  }
+
   deleteArtist(id: number) {
     this.api.deleteArtist(id)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -156,6 +167,14 @@ export class ArtistOverview implements OnInit {
       this.imageUrlMap.set(id, this.api.downloadArtistImage(id));
     }
     return this.imageUrlMap.get(id)!;
+  }
+
+  openDialogDeleteArtistImage(id: number, name: string) {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: new DeleteDialogData("Image", ` the image from ${name}`) });
+
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(result => result && this.deleteArtistImage(id));
   }
 
   deleteArtistImage(id: number) {

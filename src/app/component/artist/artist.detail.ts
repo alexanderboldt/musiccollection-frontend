@@ -141,7 +141,7 @@ export class ArtistDetail implements OnInit{
   }
 
   openDialogDeleteArtistImage() {
-    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: new DeleteDialogData("Image", ` the image of ${this.name()}`) });
+    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: new DeleteDialogData("Image", ` the image from ${this.name()}`) });
 
     dialogRef.afterClosed()
       .pipe(takeUntilDestroyed(this.destroyRef))
