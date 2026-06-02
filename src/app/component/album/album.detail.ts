@@ -15,6 +15,8 @@ import { Option } from '../option'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CONSTANTS } from '../constants';
 import { NAVIGATION } from '../../navigation/navigation';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteDialogComponent, DeleteDialogData } from '../delete.dialog';
 
 @Component({
   selector: 'album-detail',
@@ -47,7 +49,7 @@ import { NAVIGATION } from '../../navigation/navigation';
         <button type="button" (click)="fileInput.click()" [disabled]="isButtonSetImageDisabled()" matButton>{{ CONSTANTS.BUTTON.SET_IMAGE }}</button>
         <input type="file" id="file" hidden (change)="uploadAlbumImage($event)" #fileInput>
 
-        <button (click)="deleteAlbumImage()" [disabled]="isButtonDeleteImageDisabled()" matButton>{{ CONSTANTS.BUTTON.DELETE_IMAGE }}</button>
+        <button (click)="openDialogDeleteArtistImage()" [disabled]="isButtonDeleteImageDisabled()" matButton>{{ CONSTANTS.BUTTON.DELETE_IMAGE }}</button>
       </div>
 
       <mat-form-field>
@@ -99,6 +101,7 @@ export class AlbumDetail implements OnInit {
   private readonly router = inject(Router);
   private readonly snackBar = inject(Snackbar);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly dialog = inject(MatDialog);
 
   protected artistsSelect: Option[] = [];
 
@@ -173,6 +176,14 @@ export class AlbumDetail implements OnInit {
         this.image.set(url);
         this.isButtonDeleteImageDisabled.set(false);
       });
+  }
+
+  openDialogDeleteArtistImage() {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: new DeleteDialogData("Image", ` the image from ${this.name()}`) });
+
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(result => result && this.deleteAlbumImage());
   }
 
   deleteAlbumImage() {
