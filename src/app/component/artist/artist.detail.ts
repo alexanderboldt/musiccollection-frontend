@@ -11,6 +11,8 @@ import { Snackbar } from '../snackbar';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CONSTANTS } from '../constants';
 import { NAVIGATION } from '../../navigation/navigation';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteDialogComponent, DeleteDialogData } from '../delete.dialog';
 
 @Component({
   selector: 'artist-detail',
@@ -49,7 +51,7 @@ import { NAVIGATION } from '../../navigation/navigation';
       </mat-form-field>
       <button type="button" (click)="createOrUpdateArtist()" [disabled]="isButtonCreateOrUpdateDisabled()"
               matButton="filled" [textContent]="buttonCreateOrUpdateText()"></button>
-      <button type="button" (click)="deleteArtist()" [disabled]="isButtonDeleteDisabled()" matButton="outlined">{{ CONSTANTS.BUTTON.DELETE }}
+      <button type="button" (click)="openDialogDeleteArtist()" [disabled]="isButtonDeleteDisabled()" matButton="outlined">{{ CONSTANTS.BUTTON.DELETE }}
       </button>
     </form>
   `,
@@ -75,6 +77,7 @@ export class ArtistDetail implements OnInit{
   private readonly router = inject(Router);
   private readonly snackBar = inject(Snackbar);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly dialog = inject(MatDialog);
 
   private mode: DetailMode = DetailMode.CREATE;
 
@@ -163,6 +166,14 @@ export class ArtistDetail implements OnInit{
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => this.snackBar.show(CONSTANTS.SNACKBAR.ARTIST_UPDATED));
     }
+  }
+
+  openDialogDeleteArtist() {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: new DeleteDialogData("Artist", this.name()) });
+
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(result => result && this.deleteArtist());
   }
 
   deleteArtist() {
