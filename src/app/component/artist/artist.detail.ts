@@ -42,7 +42,7 @@ import { DeleteDialogComponent, DeleteDialogData } from '../delete.dialog';
         <button type="button" (click)="fileInput.click()" [disabled]="isButtonSetImageDisabled()" matButton>{{ CONSTANTS.BUTTON.SET_IMAGE }}</button>
         <input type="file" id="file" hidden (change)="uploadArtistImage($event)" #fileInput>
 
-        <button (click)="deleteArtistImage()" [disabled]="isButtonDeleteImageDisabled()" matButton>{{ CONSTANTS.BUTTON.DELETE_IMAGE }}</button>
+        <button (click)="openDialogDeleteArtistImage()" [disabled]="isButtonDeleteImageDisabled()" matButton>{{ CONSTANTS.BUTTON.DELETE_IMAGE }}</button>
       </div>
 
       <mat-form-field>
@@ -138,6 +138,14 @@ export class ArtistDetail implements OnInit{
         this.image.set(url);
         this.isButtonDeleteImageDisabled.set(false);
       });
+  }
+
+  openDialogDeleteArtistImage() {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: new DeleteDialogData("Image", ` the image of ${this.name()}`) });
+
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(result => result && this.deleteArtistImage());
   }
 
   deleteArtistImage() {
