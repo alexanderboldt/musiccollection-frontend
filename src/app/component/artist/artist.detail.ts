@@ -137,6 +137,7 @@ export class ArtistDetail implements OnInit{
       ).subscribe(url => {
         this.image.set(url);
         this.isButtonDeleteImageDisabled.set(false);
+        this.snackBar.show(CONSTANTS.SNACKBAR.IMAGE_UPLOADED);
       });
   }
 
@@ -154,6 +155,7 @@ export class ArtistDetail implements OnInit{
       .subscribe(() => {
         this.image.set("")
         this.isButtonDeleteImageDisabled.set(true);
+        this.snackBar.show(CONSTANTS.SNACKBAR.IMAGE_DELETED);
       });
   }
 

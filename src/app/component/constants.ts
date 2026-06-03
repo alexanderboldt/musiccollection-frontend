@@ -21,7 +21,9 @@ export const CONSTANTS = {
     ARTIST_DELETED: 'Artist successfully deleted.',
     ALBUM_CREATED: 'Album successfully created.',
     ALBUM_UPDATED: 'Album successfully updated.',
-    ALBUM_DELETED: 'Album successfully deleted.'
+    ALBUM_DELETED: 'Album successfully deleted.',
+    IMAGE_UPLOADED: 'Image successfully uploaded.',
+    IMAGE_DELETED: 'Image successfully deleted.',
   },
 
   // Query parameters

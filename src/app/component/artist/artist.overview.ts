@@ -17,6 +17,7 @@ import { CONSTANTS } from '../constants';
 import { NAVIGATION } from '../../navigation/navigation';
 import { DeleteDialogComponent, DeleteDialogData } from '../delete.dialog';
 import { MatDialog } from '@angular/material/dialog';
+import { Snackbar } from '../snackbar';
 
 @Component({
   selector: 'artist-overview',
@@ -109,6 +110,7 @@ export class ArtistOverview implements OnInit {
   private readonly api = inject(Api);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly snackBar = inject(Snackbar);
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialog = inject(MatDialog);
 
@@ -153,13 +155,19 @@ export class ArtistOverview implements OnInit {
   deleteArtist(id: number) {
     this.api.deleteArtist(id)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.readAllArtist());
+      .subscribe(() => {
+        this.snackBar.show(CONSTANTS.SNACKBAR.ARTIST_DELETED);
+        this.readAllArtist();
+      });
   }
 
   uploadArtistImage(id: number, event: any) {
     this.api.uploadArtistImage(id, event.target.files[0])
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.readAllArtist());
+      .subscribe(() => {
+        this.snackBar.show(CONSTANTS.SNACKBAR.IMAGE_UPLOADED);
+        this.readAllArtist();
+      });
   }
 
   downloadArtistImage(id: number): Observable<string> {
@@ -180,7 +188,10 @@ export class ArtistOverview implements OnInit {
   deleteArtistImage(id: number) {
     this.api.deleteArtistImage(id)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.readAllArtist());
+      .subscribe(() => {
+        this.readAllArtist();
+        this.snackBar.show(CONSTANTS.SNACKBAR.IMAGE_DELETED);
+      });
   }
 
   private fetchArtists() {
