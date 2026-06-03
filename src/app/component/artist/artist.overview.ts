@@ -135,31 +135,7 @@ export class ArtistOverview implements OnInit {
     });
   }
 
-  readAllArtist() {
-    this.router.navigate([], {
-      relativeTo: this.activatedRoute,
-      queryParams: { sort: this.selectedSort },
-      queryParamsHandling: 'merge'
-    });
-    this.fetchArtists();
-  }
-
-  openDialogDeleteArtist(id: number, name: string) {
-    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: new DeleteDialogData("Artist", name) });
-
-    dialogRef.afterClosed()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(result => result && this.deleteArtist(id));
-  }
-
-  deleteArtist(id: number) {
-    this.api.deleteArtist(id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.snackBar.show(CONSTANTS.SNACKBAR.ARTIST_DELETED);
-        this.readAllArtist();
-      });
-  }
+  // region image functions
 
   uploadArtistImage(id: number, event: any) {
     this.api.uploadArtistImage(id, event.target.files[0])
@@ -191,6 +167,34 @@ export class ArtistOverview implements OnInit {
       .subscribe(() => {
         this.readAllArtist();
         this.snackBar.show(CONSTANTS.SNACKBAR.IMAGE_DELETED);
+      });
+  }
+
+  // endregion
+
+  readAllArtist() {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: { sort: this.selectedSort },
+      queryParamsHandling: 'merge'
+    });
+    this.fetchArtists();
+  }
+
+  openDialogDeleteArtist(id: number, name: string) {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: new DeleteDialogData("Artist", name) });
+
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(result => result && this.deleteArtist(id));
+  }
+
+  deleteArtist(id: number) {
+    this.api.deleteArtist(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.snackBar.show(CONSTANTS.SNACKBAR.ARTIST_DELETED);
+        this.readAllArtist();
       });
   }
 

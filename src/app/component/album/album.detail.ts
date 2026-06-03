@@ -165,6 +165,8 @@ export class AlbumDetail implements OnInit {
     }
   }
 
+  // region image functions
+
   uploadAlbumImage(event: any) {
     this
       .api
@@ -196,6 +198,8 @@ export class AlbumDetail implements OnInit {
         this.snackBar.show(CONSTANTS.SNACKBAR.IMAGE_DELETED);
       });
   }
+
+  // endregion
 
   isButtonCreateOrUpdateDisabled() {
     return this.artist() == "" || this.name().length == 0 || this.year() <= 0 || this.tracks() <= 0;

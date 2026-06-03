@@ -129,6 +129,8 @@ export class ArtistDetail implements OnInit{
     }
   }
 
+  // region image functions
+
   uploadArtistImage(event: any) {
     this.api.uploadArtistImage(this.id, event.target.files[0])
       .pipe(
@@ -158,6 +160,8 @@ export class ArtistDetail implements OnInit{
         this.snackBar.show(CONSTANTS.SNACKBAR.IMAGE_DELETED);
       });
   }
+
+  // endregion
 
   onChangeArtistName() {
     this.isButtonCreateOrUpdateDisabled.set(this.name().length == 0);

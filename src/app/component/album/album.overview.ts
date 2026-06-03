@@ -16,7 +16,7 @@ import { CONSTANTS } from '../constants';
 import { NAVIGATION } from '../../navigation/navigation';
 import { DeleteDialogComponent, DeleteDialogData } from '../delete.dialog';
 import { MatDialog } from '@angular/material/dialog';
-import {Snackbar} from '../snackbar';
+import { Snackbar } from '../snackbar';
 
 @Component({
   selector: 'album-overview',
@@ -165,35 +165,7 @@ export class AlbumOverview implements OnInit {
     });
   }
 
-  readAllAlbums() {
-    this.router.navigate([], {
-      relativeTo: this.activatedRoute,
-      queryParams: {
-        filter: this.selectedFilter,
-        sort: this.selectedSort
-      },
-      queryParamsHandling: 'merge'
-    });
-    this.fetchAlbums();
-  }
-
-  openDialogDeleteAlbum(id: number, name: string) {
-    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: new DeleteDialogData("Album", name) });
-
-    dialogRef.afterClosed()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(result => result && this.deleteAlbum(id));
-  }
-
-  deleteAlbum(id: number) {
-    this.api
-      .deleteAlbum(id)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.snackBar.show(CONSTANTS.SNACKBAR.ALBUM_DELETED);
-        this.readAllAlbums();
-      });
-  }
+  // region image functions
 
   uploadAlbumImage(id: number, event: any) {
     this.api
@@ -227,6 +199,38 @@ export class AlbumOverview implements OnInit {
       .subscribe(() => {
         this.readAllAlbums();
         this.snackBar.show(CONSTANTS.SNACKBAR.IMAGE_DELETED);
+      });
+  }
+
+  // endregion
+
+  readAllAlbums() {
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        filter: this.selectedFilter,
+        sort: this.selectedSort
+      },
+      queryParamsHandling: 'merge'
+    });
+    this.fetchAlbums();
+  }
+
+  openDialogDeleteAlbum(id: number, name: string) {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: new DeleteDialogData("Album", name) });
+
+    dialogRef.afterClosed()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(result => result && this.deleteAlbum(id));
+  }
+
+  deleteAlbum(id: number) {
+    this.api
+      .deleteAlbum(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.snackBar.show(CONSTANTS.SNACKBAR.ALBUM_DELETED);
+        this.readAllAlbums();
       });
   }
 
