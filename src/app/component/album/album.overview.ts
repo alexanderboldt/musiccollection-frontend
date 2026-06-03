@@ -16,6 +16,7 @@ import { CONSTANTS } from '../constants';
 import { NAVIGATION } from '../../navigation/navigation';
 import { DeleteDialogComponent, DeleteDialogData } from '../delete.dialog';
 import { MatDialog } from '@angular/material/dialog';
+import {Snackbar} from '../snackbar';
 
 @Component({
   selector: 'album-overview',
@@ -123,6 +124,7 @@ export class AlbumOverview implements OnInit {
 
   private readonly api = inject(Api);
   private readonly router = inject(Router);
+  private readonly snackBar = inject(Snackbar);
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
   private readonly dialog = inject(MatDialog);
@@ -184,11 +186,23 @@ export class AlbumOverview implements OnInit {
   }
 
   deleteAlbum(id: number) {
-    this.api.deleteAlbum(id).subscribe(() => this.readAllAlbums());
+    this.api
+      .deleteAlbum(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.snackBar.show(CONSTANTS.SNACKBAR.ALBUM_DELETED);
+        this.readAllAlbums();
+      });
   }
 
   uploadAlbumImage(id: number, event: any) {
-    this.api.uploadAlbumImage(id, event.target.files[0]).subscribe(() => this.readAllAlbums());
+    this.api
+      .uploadAlbumImage(id, event.target.files[0])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.readAllAlbums();
+        this.snackBar.show(CONSTANTS.SNACKBAR.IMAGE_UPLOADED);
+      });
   }
 
   downloadAlbumImage(id: number): Observable<string> {
@@ -207,7 +221,13 @@ export class AlbumOverview implements OnInit {
   }
 
   deleteAlbumImage(id: number) {
-    this.api.deleteAlbumImage(id).subscribe(() => this.readAllAlbums());
+    this.api
+      .deleteAlbumImage(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.readAllAlbums();
+        this.snackBar.show(CONSTANTS.SNACKBAR.IMAGE_DELETED);
+      });
   }
 
   private fetchAlbums() {
